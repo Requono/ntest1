@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  password      String
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  createdEvents Event[]
+  events        UserOnEvent[]
+  groups        UserOnGroup[]
+  groupId       String?
+  leaderOnGroup LeaderOnGroup[]
+  group         Group[]
+
+  @@map(name: "users")
+}
+
+model Event {
+  id          String        @id @default(cuid())
+  createdById String        @unique
+  joinedUsers User[]        @relation()
+  createdAt   DateTime      @default(now()) @map(name: "created_at")
+  updatedAt   DateTime      @updatedAt @map(name: "updated_at")
+  endDate     DateTime
+  users       UserOnEvent[]
+
+  @@map(name: "events")
+}
+
+model UserOnEvent {
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @unique
+
+  @@id([eventId, userId])
+  @@map(name: "useronevent")
+}
+
+model Group {
+  id            String          @unique
+  createdBy     User            @relation(fields: [userId], references: [id])
+  name          String
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  users         UserOnGroup[]
+  userId        String
+  LeaderOnGroup LeaderOnGroup[]
+
+  @@map(name: "groups")
+}
+
+model UserOnGroup {
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @unique
+
+  @@id([groupId, userId])
+  @@map(name: "userongroup")
+}
+
+model LeaderOnGroup {
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @unique
+
+  @@id([groupId, userId])
+  @@map(name: "leaderongroup")
+}
