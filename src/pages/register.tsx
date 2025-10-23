@@ -1,7 +1,5 @@
-import styled from "@emotion/styled";
 import {
   Input,
-  Stack,
   Button,
   Image,
   InputGroup,
@@ -15,12 +13,13 @@ import classes from "./register.module.css";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { deriveLoginHash } from "@/utils/crypto";
 
-export default function Register() {
-  const [username, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
+interface RegisterProps {
+  iterations: string;
+}
+
+const Register: React.FC<RegisterProps> = ({ iterations }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -61,11 +60,18 @@ export default function Register() {
       if (loading) return;
       setLoading(true);
 
+      const loginHash = await deriveLoginHash(
+        values.password,
+        values.email,
+        600000
+      );
+
       try {
         await axios.post("/api/create_user", {
-          name: name,
-          email: email,
-          password: password,
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          hash: loginHash,
         });
 
         toast({
@@ -79,7 +85,7 @@ export default function Register() {
       } catch (error: any) {
         console.log(error);
         toast({
-          title: error.response.data.message,
+          title: error.response.data.username,
           isClosable: true,
           duration: 4000,
           status: "error",
@@ -324,4 +330,24 @@ export default function Register() {
       </div>
     </>
   );
+};
+
+export default Register;
+
+export async function getServerSideProps() {
+  try {
+    const response = await axios.post("/api/iterations");
+    return {
+      props: {
+        iterations: response.data.iterations,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching iterations:", error);
+  }
+  return {
+    props: {
+      iterations: [],
+    },
+  };
 }

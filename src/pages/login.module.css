@@ -1,0 +1,47 @@
+.errorMessage {
+  margin-top: 10px;
+  color: #e57373;
+  text-align: left;
+  font-size: 12px;
+}
+
+.loginScreenContainer {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  gap: 48px;
+  margin: 30px;
+  position: absolute;
+  top: 10%;
+}
+
+.subTitle {
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginInputGroup {
+  width: 300px;
+  flex-direction: column;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputContainer .loginInputGroup {
+  width: 300px;
+  flex-direction: column;
+}
+
+.titleImage {
+  margin-bottom: 24px;
+}
