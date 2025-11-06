@@ -56,7 +56,6 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
     },
     validationSchema: registerSchema,
     onSubmit: async (values) => {
-      console.log("values: ", values);
       if (loading) return;
       setLoading(true);
 
@@ -83,7 +82,6 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
 
         router.push("/login");
       } catch (error: any) {
-        console.log(error);
         toast({
           title: error.response.data.username,
           isClosable: true,
@@ -243,7 +241,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
                   width: "300px",
                   flexDirection: "column",
                   marginTop:
-                    !!formik.errors.username && !!formik.touched.username
+                    !!formik.errors.password && !!formik.touched.password
                       ? "4px"
                       : "32px",
                 }}

@@ -40,13 +40,12 @@ const Login = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
-      console.log(values);
       if (loading) {
         return;
       }
       setLoading(true);
 
-      const response = await axios.post("/iterations", {
+      const response = await axios.post("/api/iterations", {
         email: values.email,
       });
 
@@ -59,7 +58,7 @@ const Login = () => {
       );
 
       try {
-        await axios.post("api/login_user", {
+        await axios.post("/api/login_user", {
           email: values.email,
           hash: loginHash,
         });
@@ -76,8 +75,6 @@ const Login = () => {
 
         router.push("/playground");
       } catch (err: any) {
-        console.log(err.message);
-
         toast({
           title: err.response.data.message,
           duration: 4000,

@@ -26,6 +26,5 @@ export default async function handler(
     if (error instanceof Error) {
       res.status(400).send({ username: "Error creating user" });
     }
-    console.log(error);
   }
 }
