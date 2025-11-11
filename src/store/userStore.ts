@@ -2,8 +2,10 @@ import { create } from "zustand";
 
 export enum AirsoftGameType {
   LARP = "LARP",
-  MILSIM = "Milsim",
+  MILSIM = "MilSim",
   CQB = "CQB",
+  SPEEDSOFT = "SpeedSoft",
+  SKIRMISH = "Skirmish",
 }
 
 interface AirsoftGames {

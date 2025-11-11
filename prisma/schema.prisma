@@ -15,7 +15,6 @@ model User {
   id            String          @id @default(cuid())
   username      String          @unique
   email         String          @unique
-  password      String
   iterations    Int             @default(600000)
   hash          String
   createdAt     DateTime        @default(now()) @map(name: "created_at")
@@ -32,13 +31,25 @@ model User {
 }
 
 model Event {
-  id          String        @id @default(cuid())
-  createdById String        @unique
-  joinedUsers User[]        @relation()
-  createdAt   DateTime      @default(now()) @map(name: "created_at")
-  updatedAt   DateTime      @updatedAt @map(name: "updated_at")
+  id          String @id @default(cuid())
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  startDate   DateTime
   endDate     DateTime
-  users       UserOnEvent[]
+  title       String
+  description String
+  location    String
+  maxPlayers  String
+  visibility  String   @default("public")
+  status      String   @default("open")
+  gameType    String?
+  price       Float?
+
+  users UserOnEvent[]
 
   @@map(name: "events")
 }

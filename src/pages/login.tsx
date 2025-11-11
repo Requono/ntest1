@@ -4,7 +4,6 @@ import { useState } from "react";
 import * as Yup from "yup";
 import {
   useToast,
-  Image,
   InputGroup,
   Input,
   InputRightElement,
@@ -17,7 +16,7 @@ import {
   deriveEncryptionKeyFromMasterPassword,
   deriveLoginHash,
 } from "@/utils/crypto";
-import classes from "./login.module.css";
+import classes from "../styles/login.module.css";
 
 const Login = () => {
   const router = useRouter();
@@ -98,15 +97,6 @@ const Login = () => {
     >
       <div className={classes.loginScreenContainer}>
         <div className="title-box">
-          <Image
-            src="/logo_big.svg"
-            width={300}
-            height={300}
-            alt="NP logo"
-            style={{
-              marginBottom: "24px",
-            }}
-          />
           <span className={classes.subTitle}>
             Welcome back! In case you already have an account, log in below.
           </span>
@@ -208,7 +198,7 @@ const Login = () => {
           >
             <Button
               variant="solid"
-              colorScheme="telegram"
+              colorScheme="blue"
               style={{
                 marginBottom: "72px",
                 width: "100px",

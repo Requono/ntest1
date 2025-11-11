@@ -17,8 +17,7 @@ export default async function handler(
       data: {
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password,
-        hash: req.body.hash, //TODO: beleirni adattáblába
+        hash: req.body.hash,
       },
     });
     res.status(200).json(user);

@@ -1,7 +1,6 @@
 import {
   Input,
   Button,
-  Image,
   InputGroup,
   InputRightElement,
   Spinner,
@@ -9,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-import classes from "./register.module.css";
+import classes from "../styles/register.module.css";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -69,7 +68,6 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
         await axios.post("/api/create_user", {
           username: values.username,
           email: values.email,
-          password: values.password,
           hash: loginHash,
         });
 
@@ -106,14 +104,6 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
       >
         <div className={classes.registerScreenContainer}>
           <div className="title-box">
-            <Image
-              width={500}
-              height={150}
-              alt="logo here "
-              style={{
-                marginBottom: "24px",
-              }}
-            />
             <span className={classes.subTitle}>
               Welcome! Since you are new here, please sign up below.
             </span>
@@ -297,7 +287,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
             >
               <Button
                 variant="solid"
-                colorScheme="telegram"
+                colorScheme="blue"
                 type="submit"
                 style={{
                   marginBottom: "72px",
