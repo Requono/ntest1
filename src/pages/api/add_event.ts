@@ -40,6 +40,14 @@ export default async function handler(
         status: req.body.status,
         gameType: req.body.gameType,
         price: req.body.price ? Number(req.body.price) : null,
+        users: {
+          create: {
+            userId,
+          },
+        },
+      },
+      include: {
+        users: true,
       },
     });
     res.status(200).json(event);

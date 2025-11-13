@@ -19,7 +19,9 @@ import {
 import { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
-import { AirsoftGameType } from "@/shared/enums/AirsoftGameType";
+import { AirsoftEventType } from "@/shared/enums/AirsoftEventType";
+import { useEventStore } from "@/store/eventStore";
+import { AirsoftEventsInput } from "@/shared/interfaces/AirsoftEventsInput";
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -34,8 +36,17 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
   initialData,
   mode,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const title = mode === EventModalMode.ADD ? "Add event" : "Edit event";
   const toast = useToast();
-  const formik = useFormik({
+  const formatDateForInput = (date?: string | Date) => {
+    if (!date) return "";
+    const d = typeof date === "string" ? new Date(date) : date;
+    const iso = d.toISOString();
+    return iso.substring(0, 16);
+  };
+
+  const formik = useFormik<AirsoftEventsInput>({
     initialValues: {
       title: initialData?.title || "",
       description: initialData?.description || "",
@@ -57,23 +68,12 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
         if (mode === EventModalMode.EDIT) {
           await axios.post("/api/update_event", {});
         } else {
-          console.log("are we here");
-          await axios.post("/api/add_event", {
-            title: values.title,
-            description: values.description,
-            startDate: values.startDate,
-            endDate: values.endDate,
-            location: values.location,
-            maxPlayers: values.maxPlayers,
-            visibility: values.visibility,
-            status: values.status,
-            gameType: values.gameType,
-            price: values.price,
-          });
+          const addEvent = useEventStore.getState().addEvent;
+          addEvent(values);
         }
       } catch (error: any) {
         toast({
-          title: error.response.data.event,
+          title: error?.response?.data?.event || "Failed to create event",
           isClosable: true,
           duration: 4000,
           status: "error",
@@ -84,9 +84,6 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
       }
     },
   });
-
-  const [loading, setLoading] = useState(false);
-  const title = mode === EventModalMode.ADD ? "Add event" : "Edit event";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
@@ -138,7 +135,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="datetime-local"
                   name="startDate"
-                  value={formik.values.startDate}
+                  value={formatDateForInput(formik.values.startDate)}
                   onChange={formik.handleChange}
                 />
               </FormControl>
@@ -148,7 +145,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="datetime-local"
                   name="endDate"
-                  value={formik.values.endDate}
+                  value={formatDateForInput(formik.values.endDate)}
                   onChange={formik.handleChange}
                 />
               </FormControl>
@@ -196,7 +193,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                   value={formik.values.gameType}
                   onChange={formik.handleChange}
                 >
-                  {Object.values(AirsoftGameType).map((type) => (
+                  {Object.values(AirsoftEventType).map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>

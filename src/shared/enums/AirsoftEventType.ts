@@ -1,4 +1,4 @@
-export enum AirsoftGameType {
+export enum AirsoftEventType {
   LARP = "LARP",
   MILSIM = "MilSim",
   CQB = "CQB",

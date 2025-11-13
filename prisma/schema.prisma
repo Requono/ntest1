@@ -46,8 +46,8 @@ model Event {
   maxPlayers  String
   visibility  String   @default("public")
   status      String   @default("open")
-  gameType    String?
-  price       Float?
+  gameType    String
+  price       Float
 
   users UserOnEvent[]
 
@@ -56,9 +56,9 @@ model Event {
 
 model UserOnEvent {
   event   Event  @relation(fields: [eventId], references: [id])
-  eventId String @unique
+  eventId String
   user    User   @relation(fields: [userId], references: [id])
-  userId  String @unique
+  userId  String
 
   @@id([eventId, userId])
   @@map(name: "useronevent")
