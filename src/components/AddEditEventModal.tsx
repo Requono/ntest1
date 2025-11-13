@@ -1,4 +1,4 @@
-import { EventModalMode } from "@/enums/EventModalMode";
+import { EventModalMode } from "@/shared/enums/EventModalMode";
 import {
   Button,
   FormControl,
@@ -13,15 +13,17 @@ import {
   ModalOverlay,
   Select,
   Textarea,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { Image } from "@chakra-ui/react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import axios from "axios";
+import { AirsoftGameType } from "@/shared/enums/AirsoftGameType";
 
 interface AddEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
   initialData?: any;
   mode: EventModalMode;
 }
@@ -29,84 +31,84 @@ interface AddEventModalProps {
 const AddEventModal: React.FC<AddEventModalProps> = ({
   isOpen,
   onClose,
-  onSubmit,
   initialData,
   mode,
 }) => {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    location: "",
-    maxPlayers: "",
-    visibility: "public",
-    status: "open",
-    gameType: "",
-    price: "",
+  const toast = useToast();
+  const formik = useFormik({
+    initialValues: {
+      title: initialData?.title || "",
+      description: initialData?.description || "",
+      startDate: initialData?.startDate || "",
+      endDate: initialData?.endDate || "",
+      location: initialData?.location || "",
+      maxPlayers: initialData?.maxPlayers || "",
+      visibility: initialData?.visibility || "public",
+      status: initialData?.status || "open",
+      gameType: initialData?.gameType || "",
+      price: initialData?.price || "",
+    },
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      console.log("add item");
+      setLoading(true);
+
+      try {
+        if (mode === EventModalMode.EDIT) {
+          await axios.post("/api/update_event", {});
+        } else {
+          console.log("are we here");
+          await axios.post("/api/add_event", {
+            title: values.title,
+            description: values.description,
+            startDate: values.startDate,
+            endDate: values.endDate,
+            location: values.location,
+            maxPlayers: values.maxPlayers,
+            visibility: values.visibility,
+            status: values.status,
+            gameType: values.gameType,
+            price: values.price,
+          });
+        }
+      } catch (error: any) {
+        toast({
+          title: error.response.data.event,
+          isClosable: true,
+          duration: 4000,
+          status: "error",
+        });
+      } finally {
+        setLoading(false);
+        onClose();
+      }
+    },
   });
 
-  useEffect(() => {
-    if (isOpen) {
-      setForm({
-        title: initialData.title ?? "",
-        description: initialData.description ?? "",
-        startDate: initialData.startDate,
-        endDate: initialData.endDate,
-        location: initialData.location ?? "",
-        maxPlayers: initialData.maxPlayers ?? "",
-        visibility: initialData.visibility ?? "public",
-        status: initialData.status ?? "open",
-        gameType: initialData.gameType ?? "",
-        price: initialData.price ?? "",
-      });
-    }
-  }, [initialData, isOpen]);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const dataToSubmit = {
-      ...form,
-      startDate: form.startDate ? new Date(form.startDate) : null,
-      endDate: form.endDate ? new Date(form.endDate) : null,
-      maxPlayers: form.maxPlayers ? Number(form.maxPlayers) : null,
-      price: form.price ? Number(form.price) : null,
-    };
-    onSubmit(dataToSubmit);
-    onClose();
-  };
-
+  const [loading, setLoading] = useState(false);
   const title = mode === EventModalMode.ADD ? "Add event" : "Edit event";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
-      <Image alt="fasz" src={""} />
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            formik.handleSubmit();
+          }}
+        >
+          <ModalHeader>{title}</ModalHeader>
+          <ModalCloseButton />
+
           <ModalBody>
             <VStack spacing="4" align="stretch">
               <FormControl isRequired>
                 <FormLabel>Title</FormLabel>
                 <Input
                   name="title"
-                  value={form.title}
-                  onChange={handleChange}
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
                   placeholder="Event title"
                 />
               </FormControl>
@@ -115,8 +117,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <FormLabel>Description</FormLabel>
                 <Textarea
                   name="description"
-                  value={form.description}
-                  onChange={handleChange}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
                   placeholder="Describe the event..."
                 />
               </FormControl>
@@ -125,8 +127,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <FormLabel>Location</FormLabel>
                 <Input
                   name="location"
-                  value={form.location}
-                  onChange={handleChange}
+                  value={formik.values.location}
+                  onChange={formik.handleChange}
                   placeholder="e.g. Szegedi Airsoft Field"
                 />
               </FormControl>
@@ -136,8 +138,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="datetime-local"
                   name="startDate"
-                  value={form.startDate}
-                  onChange={handleChange}
+                  value={formik.values.startDate}
+                  onChange={formik.handleChange}
                 />
               </FormControl>
 
@@ -146,8 +148,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="datetime-local"
                   name="endDate"
-                  value={form.endDate}
-                  onChange={handleChange}
+                  value={formik.values.endDate}
+                  onChange={formik.handleChange}
                 />
               </FormControl>
 
@@ -156,8 +158,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="number"
                   name="maxPlayers"
-                  value={form.maxPlayers}
-                  onChange={handleChange}
+                  value={formik.values.maxPlayers}
+                  onChange={formik.handleChange}
                   placeholder="e.g. 60"
                 />
               </FormControl>
@@ -166,8 +168,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <FormLabel>Visibility</FormLabel>
                 <Select
                   name="visibility"
-                  value={form.visibility}
-                  onChange={handleChange}
+                  value={formik.values.visibility}
+                  onChange={formik.handleChange}
                 >
                   <option value="public">Public</option>
                   <option value="private">Private</option>
@@ -178,8 +180,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <FormLabel>Status</FormLabel>
                 <Select
                   name="status"
-                  value={form.status}
-                  onChange={handleChange}
+                  value={formik.values.status}
+                  onChange={formik.handleChange}
                 >
                   <option value="open">Open</option>
                   <option value="closed">Closed</option>
@@ -191,24 +193,24 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <FormLabel>Game Type</FormLabel>
                 <Select
                   name="gameType"
-                  value={form.status}
-                  onChange={handleChange}
+                  value={formik.values.gameType}
+                  onChange={formik.handleChange}
                 >
-                  <option value="larp">LARP</option>
-                  <option value="milsim">MilSim</option>
-                  <option value="cqb">CQB</option>
-                  <option value="speedsoft">SpeedSoft</option>
-                  <option value="skirmish">Skirmish</option>
+                  {Object.values(AirsoftGameType).map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
 
-              <FormControl>
+              <FormControl isRequired>
                 <FormLabel>Price (HUF)</FormLabel>
                 <Input
                   type="number"
                   name="price"
-                  value={form.price}
-                  onChange={handleChange}
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
                   placeholder="e.g. 2000"
                 />
               </FormControl>
@@ -218,8 +220,13 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
             <Button variant="outline" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="solid" colorScheme="blue" type="submit">
-              Add Event
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              type="submit"
+              isLoading={loading}
+            >
+              {mode === EventModalMode.EDIT ? "Edit event" : "Add event"}
             </Button>
           </ModalFooter>
         </form>

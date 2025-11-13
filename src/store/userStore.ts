@@ -1,65 +1,37 @@
 import { create } from "zustand";
 
-export enum AirsoftGameType {
-  LARP = "LARP",
-  MILSIM = "MilSim",
-  CQB = "CQB",
-  SPEEDSOFT = "SpeedSoft",
-  SKIRMISH = "Skirmish",
-}
-
-interface AirsoftGames {
-  id: string;
-  type: AirsoftGameType;
-  createdAt: Date;
-  updatedAt: Date;
-  displayName: string;
-  description: string;
-}
-
 interface UserState {
+  userId: string;
   email: string | null;
-  items: AirsoftGames[];
+  username: string | null;
   key: CryptoKey | null;
-  createEvent: (payload: AirsoftGames) => void;
-  deleteEvent: (id: string) => void;
-  updateEvent: (payload: AirsoftGames) => void;
-  initializeUser: (email: string, key: CryptoKey) => void;
-  initializeItems: (items: AirsoftGames[]) => void;
+
+  initializeUser: (
+    user: { userId: string; email: string; username: string },
+    key: CryptoKey
+  ) => void;
+  getUserId: () => string | null;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   email: "",
-  items: [],
   key: null,
-  createEvent: (payload: AirsoftGames) => {
-    set((state) => ({
-      items: [...state.items, payload],
-    }));
-  },
-  deleteEvent: (id: string) => {
-    set((state) => ({
-      items: state.items.filter((item) => item.id !== id),
-    }));
-  },
-  updateEvent: (payload: AirsoftGames) => {
-    set((state) => ({
-      items: state.items.map((item) => {
-        if (item.id !== payload.id) return item;
+  userId: "",
+  username: "",
 
-        return payload;
-      }),
-    }));
-  },
-  initializeUser: (email: string, key: CryptoKey) => {
+  initializeUser: (
+    user: { userId: string; email: string; username: string },
+    key: CryptoKey
+  ) => {
     return set(() => ({
       key,
-      email,
+      email: user.email,
+      userId: user.userId,
+      username: user.username,
     }));
   },
-  initializeItems: (items: AirsoftGames[]) => {
-    set(() => ({
-      items,
-    }));
+  getUserId: () => {
+    const state = get();
+    return state.userId;
   },
 }));

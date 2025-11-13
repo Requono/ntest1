@@ -57,12 +57,10 @@ const Login = () => {
       );
 
       try {
-        await axios.post("/api/login_user", {
+        const loginResponse = await axios.post("/api/login_user", {
           email: values.email,
           hash: loginHash,
         });
-
-        //TODO add snackbar success alert before router.push
 
         const encryptionKey = await deriveEncryptionKeyFromMasterPassword(
           values.password,
@@ -70,7 +68,12 @@ const Login = () => {
           iterations
         );
 
-        initializeUser(values.email, encryptionKey);
+        const user = loginResponse.data;
+
+        initializeUser(
+          { userId: user.userId, email: user.email, username: user.username },
+          encryptionKey
+        );
 
         router.push("/playground");
       } catch (err: any) {

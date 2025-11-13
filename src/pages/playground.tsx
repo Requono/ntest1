@@ -4,7 +4,7 @@ import { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddEditEventModal from "../components/AddEditEventModal";
 import { useDisclosure } from "@chakra-ui/react";
-import { EventModalMode } from "@/enums/EventModalMode";
+import { EventModalMode } from "@/shared/enums/EventModalMode";
 
 const mockEvents = [
   {
@@ -41,27 +41,6 @@ const Playground = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const handleSubmit = async (data: any) => {
-    console.log("Event data: ", data);
-    //api request here later
-
-    const newEvent = {
-      title: data.title,
-      description: data.description,
-      start: new Date(data.startDate),
-      end: new Date(data.endDate),
-      location: data.location,
-      maxPlayers: data.maxPlayers,
-      visibility: data.visibility,
-      status: data.status,
-      gameType: data.gameType,
-      price: data.price,
-    };
-
-    setEvents([...events, newEvent]);
-    onClose();
-  };
 
   const handleSelectSlot = (slotInfo: any) => {
     const startDateString = toDateTimeLocal(slotInfo.start);
@@ -118,7 +97,6 @@ const Playground = () => {
         <AddEditEventModal
           isOpen={isOpen}
           onClose={onClose}
-          onSubmit={handleSubmit}
           initialData={
             selectedEvent
               ? selectedEvent

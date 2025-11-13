@@ -6,11 +6,6 @@ import { setCookie } from "cookies-next";
 
 const prisma = new PrismaClient();
 
-type Data = {
-  message: string;
-  accessToken?: string;
-};
-
 interface RequestBody {
   email: string;
   hash: string;
@@ -26,17 +21,14 @@ const validationSchema = yup.object({
       message: "Hash is not a valid base64 string!",
       test: (value) => {
         if (!value) {
-          return false; // Allow empty strings, you can change this behavior if needed
+          return false;
         }
         try {
-          // Attempt to decode the value from Base64
           const decodedValue = atob(value);
-          // Check if the decoded value can be re-encoded as Base64
           const reencodedValue = btoa(decodedValue);
-          // Compare the original value with the re-encoded value
           return value === reencodedValue;
         } catch (error) {
-          return false; // Value is not valid Base64
+          return false;
         }
       },
     }),
@@ -59,7 +51,7 @@ const validateRequest = async (body: RequestBody) => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   if (req.method !== "POST") {
     res.status(405).json({ message: "Method Not Allowed" });
@@ -85,6 +77,8 @@ export default async function handler(
     select: {
       id: true,
       hash: true,
+      email: true,
+      username: true,
     },
   });
 
@@ -112,5 +106,10 @@ export default async function handler(
     sameSite: "strict",
   });
 
-  res.status(200).json({ message: "Login ok!" });
+  res.status(200).json({
+    message: "Logged in!",
+    userId: user.id,
+    email: user.email,
+    username: user.username,
+  });
 }
