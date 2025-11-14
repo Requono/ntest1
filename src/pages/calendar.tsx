@@ -8,6 +8,7 @@ import { EventModalMode } from "@/shared/enums/EventModalMode";
 import { useEventStore } from "@/store/eventStore";
 import Header from "@/components/Header";
 import { formatDateForInput } from "@/utils/formatDateForInput";
+import Footer from "@/components/Footer";
 
 const Calendar = () => {
   const localizer = momentLocalizer(moment);
@@ -71,6 +72,7 @@ const Calendar = () => {
           mode={selectedEvent ? EventModalMode.EDIT : EventModalMode.ADD}
         />
       )}
+      <Footer />
     </>
   );
 };

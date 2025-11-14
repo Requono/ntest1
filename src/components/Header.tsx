@@ -13,7 +13,7 @@ import { ChevronDownIcon, SettingsIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/store/userStore";
 import { useEffect } from "react";
-import UserGroups from "../icons/user-groups.svg";
+import UserGroups from "../icons/user-groups-icon.svg";
 
 const Header = () => {
   const router = useRouter();
