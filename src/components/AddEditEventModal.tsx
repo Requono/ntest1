@@ -16,17 +16,20 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import axios from "axios";
 import { AirsoftEventType } from "@/shared/enums/AirsoftEventType";
 import { useEventStore } from "@/store/eventStore";
-import { AirsoftEventsInput } from "@/shared/interfaces/AirsoftEventsInput";
+import {
+  AirsoftEvents,
+  AirsoftEventsInput,
+} from "@/shared/interfaces/AirsoftEventsInput";
+import { useUserStore } from "@/store/userStore";
 
 interface AddEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialData?: any;
+  initialData?: AirsoftEvents;
   mode: EventModalMode;
 }
 
@@ -52,38 +55,74 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
       description: initialData?.description || "",
       startDate: initialData?.startDate || "",
       endDate: initialData?.endDate || "",
-      location: initialData?.location || "",
+      location: initialData?.location || "", //TODO: google térkép embed maybe
       maxPlayers: initialData?.maxPlayers || "",
       visibility: initialData?.visibility || "public",
       status: initialData?.status || "open",
-      gameType: initialData?.gameType || "",
-      price: initialData?.price || "",
+      gameType: initialData?.gameType || AirsoftEventType.SKIRMISH,
+      price: initialData?.price || 0,
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
-      console.log("add item");
       setLoading(true);
-
       try {
         if (mode === EventModalMode.EDIT) {
-          await axios.post("/api/update_event", {});
+          if (!initialData) return;
+          const updateEvent = useEventStore.getState().updateEvent;
+          updateEvent({ id: initialData.id, ...values });
         } else {
           const addEvent = useEventStore.getState().addEvent;
           addEvent(values);
         }
       } catch (error: any) {
         toast({
-          title: error?.response?.data?.event || "Failed to create event",
+          title: error?.response?.data?.event || "Error while processing event",
           isClosable: true,
           duration: 4000,
           status: "error",
         });
       } finally {
+        toast({
+          title:
+            mode === EventModalMode.EDIT
+              ? "Event changed successfully!"
+              : "Event added successfully!",
+          isClosable: true,
+          duration: 4000,
+          status: "success",
+        });
         setLoading(false);
         onClose();
       }
     },
   });
+
+  const userId = useUserStore.getState().getUserId();
+  useEffect(() => {
+    if (!userId) return;
+  }, [userId]);
+
+  const handleDeleteEvent = (eventId: string) => {
+    try {
+      const deleteEvent = useEventStore.getState().deleteEvent;
+      deleteEvent(eventId);
+    } catch (error: any) {
+      toast({
+        title: error?.response?.data || "Error while deleting event",
+        isClosable: true,
+        duration: 4000,
+        status: "error",
+      });
+    } finally {
+      toast({
+        title: "Event deleted successfully!",
+        isClosable: true,
+        duration: 4000,
+        status: "success",
+      });
+      onClose();
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
@@ -206,7 +245,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
                 <Input
                   type="number"
                   name="price"
-                  value={formik.values.price}
+                  value={Number(formik.values.price)}
                   onChange={formik.handleChange}
                   placeholder="e.g. 2000"
                 />
@@ -217,6 +256,16 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
             <Button variant="outline" mr={3} onClick={onClose}>
               Close
             </Button>
+            {initialData?.createdById === userId && (
+              <Button
+                mr={3}
+                variant="solid"
+                colorScheme="red"
+                onClick={() => handleDeleteEvent(initialData?.id)}
+              >
+                Delete event
+              </Button>
+            )}
             <Button
               variant="solid"
               colorScheme="blue"

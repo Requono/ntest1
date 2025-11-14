@@ -7,26 +7,67 @@ import { create } from "zustand";
 
 interface EventState {
   events: AirsoftEvents[];
-  addEvent: (payload: AirsoftEventsInput) => void;
-  updateEvent: (event: AirsoftEvents) => void;
-  deleteEvent: (id: string) => void;
+
+  fetchEvents: () => Promise<void>;
+  addEvent: (payload: AirsoftEventsInput) => Promise<AirsoftEvents>;
+  updateEvent: (
+    event: AirsoftEventsInput & { id: string }
+  ) => Promise<AirsoftEvents>;
+  deleteEvent: (id: string) => Promise<void>;
 }
 
 export const useEventStore = create<EventState>((set) => ({
   events: [],
 
-  addEvent: async (
-    payload: AirsoftEventsInput
-  ): Promise<AirsoftEventsInput> => {
-    const response = await axios.post("/api/add_event", payload);
-    const newEvent = response.data;
-    set((state) => ({ events: [...state.events, newEvent] }));
-    return newEvent;
+  fetchEvents: async () => {
+    try {
+      const response = await axios.get("/api/fetch_events");
+      const events: AirsoftEvents[] = response.data.map((e: any) => ({
+        ...e,
+        startDate: new Date(e.startDate),
+        endDate: new Date(e.endDate),
+      }));
+      set({ events });
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
   },
-  updateEvent: (event: AirsoftEvents) =>
+  addEvent: async (payload: AirsoftEventsInput): Promise<AirsoftEvents> => {
+    try {
+      const response = await axios.post("/api/add_event", payload);
+      const newEvent: AirsoftEvents = response.data;
+
+      set((state) => ({ events: [...state.events, newEvent] }));
+      return newEvent;
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+      return {} as AirsoftEvents;
+    }
+  },
+  updateEvent: async (
+    payload: AirsoftEventsInput & { id: string }
+  ): Promise<AirsoftEvents> => {
+    try {
+      const response = await axios.post("/api/update_event", payload);
+      const updatedEvent: AirsoftEvents = response.data;
+
+      set((state) => ({
+        events: state.events.map((e) =>
+          e.id === updatedEvent.id ? updatedEvent : e
+        ),
+      }));
+
+      return updatedEvent;
+    } catch (error) {
+      console.error("Failed to update event:", error);
+      return {} as AirsoftEvents;
+    }
+  },
+  deleteEvent: async (id) => {
+    await axios.delete("/api/delete_event", { data: { id } });
+
     set((state) => ({
-      events: state.events.map((e) => (e.id === event.id ? event : e)),
-    })),
-  deleteEvent: (id) =>
-    set((state) => ({ events: state.events.filter((e) => e.id !== id) })),
+      events: state.events.filter((e) => e.id !== id),
+    }));
+  },
 }));

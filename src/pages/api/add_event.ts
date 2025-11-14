@@ -39,7 +39,7 @@ export default async function handler(
         visibility: req.body.visibility,
         status: req.body.status,
         gameType: req.body.gameType,
-        price: req.body.price ? Number(req.body.price) : null,
+        price: Number(req.body.price),
         users: {
           create: {
             userId,

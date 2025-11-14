@@ -15,6 +15,7 @@ export interface AirsoftEventsInput {
 
 export interface AirsoftEvents {
   id: string;
+  createdById: string;
   type: AirsoftEventType;
   createdAt: Date;
   updatedAt: Date;
@@ -26,6 +27,6 @@ export interface AirsoftEvents {
   maxPlayers: number;
   visibility: string;
   status: string;
-  gameType: string;
+  gameType: AirsoftEventType;
   price: number;
 }
