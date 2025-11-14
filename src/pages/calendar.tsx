@@ -1,4 +1,4 @@
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar as ReactCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -6,8 +6,10 @@ import AddEditEventModal from "../components/AddEditEventModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { EventModalMode } from "@/shared/enums/EventModalMode";
 import { useEventStore } from "@/store/eventStore";
+import Header from "@/components/Header";
+import { formatDateForInput } from "@/utils/formatDateForInput";
 
-const Playground = () => {
+const Calendar = () => {
   const localizer = momentLocalizer(moment);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -21,15 +23,15 @@ const Playground = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSelectSlot = (slotInfo: any) => {
-    const startDateString = toDateTimeLocal(slotInfo.start);
+    const startDateString = formatDateForInput(slotInfo.start);
     setSelectedDate(startDateString);
     setSelectedEvent(null);
     onOpen();
   };
 
   const handleSelectEvent = (event: any) => {
-    const startDateString = toDateTimeLocal(event.startDate);
-    const endDateString = toDateTimeLocal(event.endDate);
+    const startDateString = formatDateForInput(event.startDate);
+    const endDateString = formatDateForInput(event.endDate);
     setSelectedDate("");
     setSelectedEvent({
       ...event,
@@ -40,27 +42,11 @@ const Playground = () => {
     onOpen();
   };
 
-  const toDateTimeLocal = (date: Date | string | undefined) => {
-    if (!date) return "";
-
-    const d = date instanceof Date ? date : new Date(date);
-    if (isNaN(d.getTime())) return "";
-
-    const pad = (n: number) => n.toString().padStart(2, "0");
-
-    const year = d.getFullYear();
-    const month = pad(d.getMonth() + 1);
-    const day = pad(d.getDate());
-    const hours = pad(d.getHours());
-    const minutes = pad(d.getMinutes());
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
-
   return (
     <>
+      <Header />
       <div style={{ margin: "100px" }}>
-        <Calendar
+        <ReactCalendar
           selectable
           localizer={localizer}
           events={events}
@@ -89,4 +75,4 @@ const Playground = () => {
   );
 };
 
-export default Playground;
+export default Calendar;

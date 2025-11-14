@@ -25,6 +25,7 @@ import {
   AirsoftEventsInput,
 } from "@/shared/interfaces/AirsoftEventsInput";
 import { useUserStore } from "@/store/userStore";
+import { formatDateForInput } from "@/utils/formatDateForInput";
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -42,12 +43,6 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
   const [loading, setLoading] = useState(false);
   const title = mode === EventModalMode.ADD ? "Add event" : "Edit event";
   const toast = useToast();
-  const formatDateForInput = (date?: string | Date) => {
-    if (!date) return "";
-    const d = typeof date === "string" ? new Date(date) : date;
-    const iso = d.toISOString();
-    return iso.substring(0, 16);
-  };
 
   const formik = useFormik<AirsoftEventsInput>({
     initialValues: {

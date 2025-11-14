@@ -32,7 +32,7 @@ export default async function handler(
         createdById: userId,
         title: req.body.title,
         description: req.body.description,
-        startDate: new Date(req.body.startDate),
+        startDate: new Date(req.body.startDate), //TODO: for some reason this is set to be -1 hour than current
         endDate: new Date(req.body.endDate),
         location: req.body.location,
         maxPlayers: String(req.body.maxPlayers),

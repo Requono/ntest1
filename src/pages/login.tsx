@@ -75,7 +75,7 @@ const Login = () => {
           encryptionKey
         );
 
-        router.push("/playground");
+        router.push("/calendar");
       } catch (err: any) {
         toast({
           title: err.response.data.message,

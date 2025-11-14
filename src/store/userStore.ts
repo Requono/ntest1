@@ -1,7 +1,8 @@
+import axios from "axios";
 import { create } from "zustand";
 
 interface UserState {
-  userId: string;
+  userId: string | null;
   email: string | null;
   username: string | null;
   key: CryptoKey | null;
@@ -10,6 +11,7 @@ interface UserState {
     user: { userId: string; email: string; username: string },
     key: CryptoKey
   ) => void;
+  logoutUser: () => Promise<void>;
   getUserId: () => string | null;
 }
 
@@ -29,6 +31,20 @@ export const useUserStore = create<UserState>((set, get) => ({
       userId: user.userId,
       username: user.username,
     }));
+  },
+  logoutUser: async () => {
+    try {
+      await axios.post("/api/logout_user");
+
+      set({
+        userId: "",
+        email: "",
+        username: "",
+        key: null,
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   },
   getUserId: () => {
     const state = get();
