@@ -9,6 +9,12 @@ import {
   InputRightElement,
   Button,
   Spinner,
+  Flex,
+  Box,
+  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -16,7 +22,6 @@ import {
   deriveEncryptionKeyFromMasterPassword,
   deriveLoginHash,
 } from "@/utils/crypto";
-import classes from "../styles/login.module.css";
 
 const Login = () => {
   const router = useRouter();
@@ -90,146 +95,78 @@ const Login = () => {
   });
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-      }}
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      minH="100vh"
+      textAlign="center"
     >
-      <div className={classes.loginScreenContainer}>
-        <div className="title-box">
-          <span className={classes.subTitle}>
+      <Box
+        maxW="400px"
+        w="full"
+        p={6}
+        borderWidth={1}
+        borderRadius="md"
+        boxShadow="md"
+      >
+        <Box mb={6}>
+          <Box fontSize="lg" mb={2}>
             Welcome back! In case you already have an account, log in below.
-          </span>
-        </div>
+          </Box>
+        </Box>
         <form onSubmit={formik.handleSubmit}>
-          <div
-            className="input-container"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap:
-                !!formik.errors.email && !!formik.touched.email
-                  ? "4px"
-                  : "32px",
-              alignItems: "center",
-            }}
-          >
-            <InputGroup
-              size="md"
-              style={{
-                width: "300px",
-                flexDirection: "column",
-              }}
+          <VStack spacing={4} align="stretch">
+            <FormControl
+              isInvalid={!!formik.errors.email && !!formik.touched.email}
             >
+              <FormLabel>Email</FormLabel>
               <Input
-                pr="4.5rem"
-                type="text"
-                placeholder="e-mail"
                 name="email"
-                onChange={formik.handleChange}
+                type="text"
                 value={formik.values.email}
-                isInvalid={!!formik.errors.email && formik.touched.email}
-                errorBorderColor="red.300"
-                focusBorderColor={
-                  !!formik.errors.email && !!formik.touched.email
-                    ? "crimson"
-                    : "blue.500"
-                }
-              />
-              {formik.errors.email && formik.touched.email && (
-                <div className={classes.errorMessage}>
-                  {formik.errors.email}
-                </div>
-              )}
-            </InputGroup>
-            <InputGroup
-              size="md"
-              style={{
-                width: "300px",
-                flexDirection: "column",
-              }}
-            >
-              <Input
-                pr="4.5rem"
-                type={show ? "text" : "password"}
-                placeholder="password"
-                name="password"
                 onChange={formik.handleChange}
-                value={formik.values.password}
-                isInvalid={!!formik.errors.password && formik.touched.password}
-                errorBorderColor="red.300"
-                focusBorderColor={
-                  !!formik.errors.password && !!formik.touched.password
-                    ? "crimson"
-                    : "blue.500"
-                }
+                onBlur={formik.handleBlur}
               />
-              {formik.errors.password && formik.touched.password && (
-                <div className={classes.errorMessage}>
-                  {formik.errors.password}
-                </div>
-              )}
-              <InputRightElement width="4.5rem">
-                <Button
-                  h="1.75rem"
-                  size="sm"
-                  style={{
-                    fontVariant: "small-caps",
-                    fontSize: "12px",
-                  }}
-                  onClick={() => setShow(!show)}
-                >
-                  {show ? "Hide" : "Show"}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-          </div>
-          <div
-            className="button-container"
-            style={{
-              marginTop:
-                !!formik.errors.password && !!formik.touched.password
-                  ? "20px"
-                  : "48px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              style={{
-                marginBottom: "72px",
-                width: "100px",
-                fontVariant: "small-caps",
-              }}
-              type="submit"
+              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!formik.errors.password && !!formik.touched.password}
             >
+              <FormLabel>Password</FormLabel>
+              <InputGroup>
+                <Input
+                  name="password"
+                  type={show ? "text" : "password"}
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
+                    {show ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            </FormControl>
+            <Button type="submit" colorScheme="blue" width="full" mt={4}>
               {loading ? <Spinner /> : "Log in"}
             </Button>
-            <span className="or-sign">or</span>
-            <Button
-              variant="outline"
-              colorScheme="telegram"
-              onClick={() => router.push("/register")}
-              style={{
-                marginTop: "6px",
-                width: "100px",
-                fontVariant: "small-caps",
-                borderColor: "#171923",
-                color: "#171923",
-              }}
-            >
-              Sign up
-            </Button>
-          </div>
+            <Flex align="center" justify="center" mt={3}>
+              <Box mr={2}>or</Box>
+              <Button
+                variant="outline"
+                colorScheme="telegram"
+                onClick={() => router.push("/register")}
+              >
+                Sign up
+              </Button>
+            </Flex>
+          </VStack>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Flex>
   );
 };
 

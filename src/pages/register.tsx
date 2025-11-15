@@ -5,17 +5,23 @@ import {
   InputRightElement,
   Spinner,
   useToast,
+  Box,
+  Heading,
+  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-import classes from "../styles/register.module.css";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { deriveLoginHash } from "@/utils/crypto";
 
 interface RegisterProps {
-  iterations: string;
+  iterations?: string;
 }
 
 const Register: React.FC<RegisterProps> = ({ iterations }) => {
@@ -93,230 +99,113 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
   });
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        }}
-      >
-        <div className={classes.registerScreenContainer}>
-          <div className="title-box">
-            <span className={classes.subTitle}>
-              Welcome! Since you are new here, please sign up below.
-            </span>
-          </div>
-          <form onSubmit={formik.handleSubmit}>
-            <div
-              className="input-container"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+    <Box
+      minH="100vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      p={4}
+    >
+      <Box w="400px" p={6} borderWidth={1} borderRadius="md">
+        <Heading mb={6} textAlign="center">
+          Register
+        </Heading>
+        <form onSubmit={formik.handleSubmit}>
+          <VStack spacing={4} align="stretch">
+            <FormControl
+              isInvalid={!!formik.errors.username && !!formik.touched.username}
             >
-              <InputGroup
-                size="md"
-                style={{
-                  width: "300px",
-                  flexDirection: "column",
-                }}
-              >
+              <FormLabel>Username</FormLabel>
+              <Input
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.username}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!formik.errors.email && !!formik.touched.email}
+            >
+              <FormLabel>Email</FormLabel>
+              <Input
+                name="email"
+                type="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!formik.errors.password && !!formik.touched.password}
+            >
+              <FormLabel>Password</FormLabel>
+              <InputGroup>
                 <Input
-                  type="text"
-                  placeholder="username"
-                  name="username"
-                  onChange={formik.handleChange}
-                  value={formik.values.username}
-                  isInvalid={
-                    !!formik.errors.username && !!formik.touched.username
-                  }
-                  errorBorderColor="red.300"
-                  focusBorderColor={
-                    !!formik.errors.username && !!formik.touched.username
-                      ? "crimson"
-                      : "blue.500"
-                  }
-                />
-                {formik.errors.username && formik.touched.username && (
-                  <div className={classes.errorMessage}>
-                    {formik.errors.username}
-                  </div>
-                )}
-              </InputGroup>
-              <InputGroup
-                size="md"
-                style={{
-                  width: "300px",
-                  flexDirection: "column",
-                  marginTop:
-                    !!formik.errors.username && !!formik.touched.username
-                      ? "4px"
-                      : "32px",
-                  marginBottom:
-                    !!formik.errors.password && !!formik.touched.password
-                      ? "4px"
-                      : "32px",
-                }}
-              >
-                <Input
-                  pr="4.5rem"
-                  type="text"
-                  placeholder="e-mail"
-                  name="email"
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                  isInvalid={!!formik.errors.email && !!formik.touched.email}
-                  errorBorderColor="red.300"
-                  focusBorderColor={
-                    !!formik.errors.email && !!formik.touched.email
-                      ? "crimson"
-                      : "blue.500"
-                  }
-                />
-                {formik.errors.email && formik.touched.email && (
-                  <div className={classes.errorMessage}>
-                    {formik.errors.email}
-                  </div>
-                )}
-              </InputGroup>
-              <InputGroup
-                size="md"
-                style={{
-                  width: "300px",
-                  flexDirection: "column",
-                }}
-              >
-                <Input
-                  pr="4.5rem"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="password"
                   name="password"
-                  onChange={formik.handleChange}
-                  value={formik.values.password}
-                  isInvalid={
-                    !!formik.errors.password && !!formik.touched.password
-                  }
-                  errorBorderColor="red.300"
-                  focusBorderColor={
-                    !!formik.errors.password && !!formik.touched.password
-                      ? "crimson"
-                      : "blue.500"
-                  }
-                />
-                {formik.errors.password && formik.touched.password && (
-                  <div className={classes.errorMessage}>
-                    {formik.errors.password}
-                  </div>
-                )}
-                <InputRightElement width="4.5rem">
-                  <Button
-                    h="1.75rem"
-                    size="sm"
-                    style={{
-                      fontVariant: "small-caps",
-                      fontSize: "12px",
-                    }}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <InputGroup
-                size="md"
-                style={{
-                  width: "300px",
-                  flexDirection: "column",
-                  marginTop:
-                    !!formik.errors.password && !!formik.touched.password
-                      ? "4px"
-                      : "32px",
-                }}
-              >
-                <Input
-                  pr="4.5rem"
                   type={showPassword ? "text" : "password"}
-                  placeholder="password again"
-                  name="repassword"
+                  value={formik.values.password}
                   onChange={formik.handleChange}
-                  value={formik.values.repassword}
-                  isInvalid={
-                    !!formik.errors.repassword && !!formik.touched.repassword
-                  }
-                  errorBorderColor="red.300"
-                  focusBorderColor={
-                    !!formik.errors.repassword && !!formik.touched.repassword
-                      ? "crimson"
-                      : "blue.500"
-                  }
+                  onBlur={formik.handleBlur}
                 />
-                {formik.errors.repassword && formik.touched.repassword && (
-                  <div className={classes.errorMessage}>
-                    {formik.errors.repassword}
-                  </div>
-                )}
                 <InputRightElement width="4.5rem">
                   <Button
                     h="1.75rem"
                     size="sm"
-                    style={{
-                      fontVariant: "small-caps",
-                      fontSize: "12px",
-                    }}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? "Hide" : "Show"}
                   </Button>
                 </InputRightElement>
               </InputGroup>
-            </div>
-            <div
-              className="button-container"
-              style={{
-                marginTop:
-                  !!formik.errors.repassword && !!formik.touched.repassword
-                    ? "20px"
-                    : "48px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+              <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={
+                !!formik.errors.repassword && !!formik.touched.repassword
+              }
             >
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                type="submit"
-                style={{
-                  marginBottom: "72px",
-                  width: "100px",
-                  fontVariant: "small-caps",
-                }}
-              >
-                {loading ? <Spinner /> : "Sign up"}
-              </Button>
-              <span className="or-sign">or if you haven't done yet</span>
-              <Button
-                variant="outline"
-                colorScheme="telegram"
-                onClick={() => router.push("/login")}
-                style={{
-                  marginTop: "6px",
-                  width: "100px",
-                  borderColor: "#171923",
-                  color: "#171923",
-                  fontVariant: "small-caps",
-                }}
-              >
-                Log in
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </>
+              <FormLabel>Confirm Password</FormLabel>
+              <InputGroup>
+                <Input
+                  name="repassword"
+                  type={showPassword ? "text" : "password"}
+                  value={formik.values.repassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    h="1.75rem"
+                    size="sm"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>{formik.errors.repassword}</FormErrorMessage>
+            </FormControl>
+            <Button type="submit" colorScheme="blue" width="full" mt={4}>
+              {loading ? <Spinner /> : "Sign Up"}
+            </Button>
+            <Flex align="center" justify="center" mt={3} mb={2}>
+              <Box>Or if you haven't done yet:</Box>
+            </Flex>
+            <Button
+              variant="outline"
+              colorScheme="telegram"
+              width="full"
+              mt={2}
+              onClick={() => router.push("/login")}
+            >
+              Log in
+            </Button>
+          </VStack>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

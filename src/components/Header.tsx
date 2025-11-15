@@ -73,7 +73,7 @@ const Header = () => {
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
-            variant="solid"
+            variant="outline"
             colorScheme="white"
           >
             <Text fontWeight="bold">
