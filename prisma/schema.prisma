@@ -12,22 +12,39 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  username      String          @unique
-  email         String          @unique
-  iterations    Int             @default(600000)
-  hash          String
-  createdAt     DateTime        @default(now()) @map(name: "created_at")
-  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  id         String @id @default(cuid())
+  username   String @unique
+  email      String @unique
+  hash       String
+  iterations Int    @default(600000)
+
+  createdGroup  Group? @relation("CreatedBy")
+  memberOfGroup Group? @relation("GroupMembers", fields: [groupId], references: [id])
+
   createdEvents Event[]
   events        UserOnEvent[]
-  groups        UserOnGroup[]
-  groupId       String?
-  leaderOnGroup LeaderOnGroup[]
-  group         Group[]
   Session       Session[]
+  groupId       String?
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "users")
+}
+
+model Group {
+  id   String @id @default(cuid())
+  name String
+
+  createdById String @unique
+  createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
+
+  members User[] @relation("GroupMembers")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "groups")
 }
 
 model Event {
@@ -62,39 +79,6 @@ model UserOnEvent {
 
   @@id([eventId, userId])
   @@map(name: "useronevent")
-}
-
-model Group {
-  id            String          @unique
-  createdBy     User            @relation(fields: [userId], references: [id])
-  name          String
-  createdAt     DateTime        @default(now()) @map(name: "created_at")
-  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
-  users         UserOnGroup[]
-  userId        String
-  LeaderOnGroup LeaderOnGroup[]
-
-  @@map(name: "groups")
-}
-
-model UserOnGroup {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId String @unique
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @unique
-
-  @@id([groupId, userId])
-  @@map(name: "userongroup")
-}
-
-model LeaderOnGroup {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId String @unique
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @unique
-
-  @@id([groupId, userId])
-  @@map(name: "leaderongroup")
 }
 
 model Session {
