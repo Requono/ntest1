@@ -15,6 +15,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Heading,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -110,11 +111,9 @@ const Login = () => {
         borderRadius="md"
         boxShadow="md"
       >
-        <Box mb={6}>
-          <Box fontSize="lg" mb={2}>
-            Welcome back! In case you already have an account, log in below.
-          </Box>
-        </Box>
+        <Heading size="md" mb={6} textAlign="center">
+          Welcome back!
+        </Heading>
         <form onSubmit={formik.handleSubmit}>
           <VStack spacing={4} align="stretch">
             <FormControl
@@ -153,16 +152,16 @@ const Login = () => {
             <Button type="submit" colorScheme="blue" width="full" mt={4}>
               {loading ? <Spinner /> : "Log in"}
             </Button>
-            <Flex align="center" justify="center" mt={3}>
-              <Box mr={2}>or</Box>
-              <Button
-                variant="outline"
-                colorScheme="telegram"
-                onClick={() => router.push("/register")}
-              >
-                Sign up
-              </Button>
+            <Flex align="center" justify="center" mt={3} mb={2}>
+              <Box>or if you don't have an account:</Box>
             </Flex>
+            <Button
+              variant="outline"
+              colorScheme="telegram"
+              onClick={() => router.push("/register")}
+            >
+              Sign up
+            </Button>
           </VStack>
         </form>
       </Box>

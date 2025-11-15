@@ -107,7 +107,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
       p={4}
     >
       <Box w="400px" p={6} borderWidth={1} borderRadius="md">
-        <Heading mb={6} textAlign="center">
+        <Heading size="md" mb={6} textAlign="center">
           Register
         </Heading>
         <form onSubmit={formik.handleSubmit}>
@@ -191,7 +191,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
               {loading ? <Spinner /> : "Sign Up"}
             </Button>
             <Flex align="center" justify="center" mt={3} mb={2}>
-              <Box>Or if you haven't done yet:</Box>
+              <Box>Or if you already have an account:</Box>
             </Flex>
             <Button
               variant="outline"

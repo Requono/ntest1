@@ -43,6 +43,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
   const [loading, setLoading] = useState(false);
   const title = mode === EventModalMode.ADD ? "Add event" : "Edit event";
   const toast = useToast();
+  const { userId, fetchUser } = useUserStore();
+  const { updateEvent, addEvent, deleteEvent } = useEventStore();
 
   const formik = useFormik<AirsoftEventsInput>({
     initialValues: {
@@ -63,10 +65,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
       try {
         if (mode === EventModalMode.EDIT) {
           if (!initialData) return;
-          const updateEvent = useEventStore.getState().updateEvent;
           updateEvent({ id: initialData.id, ...values });
         } else {
-          const addEvent = useEventStore.getState().addEvent;
           addEvent(values);
         }
       } catch (error: any) {
@@ -92,14 +92,12 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
     },
   });
 
-  const userId = useUserStore.getState().getUserId();
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) fetchUser();
   }, [userId]);
 
   const handleDeleteEvent = (eventId: string) => {
     try {
-      const deleteEvent = useEventStore.getState().deleteEvent;
       deleteEvent(eventId);
     } catch (error: any) {
       toast({
