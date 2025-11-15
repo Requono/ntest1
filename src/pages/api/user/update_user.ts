@@ -1,4 +1,3 @@
-// /api/update_user.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { getCookie } from "cookies-next";

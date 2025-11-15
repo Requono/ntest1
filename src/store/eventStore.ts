@@ -21,7 +21,7 @@ export const useEventStore = create<EventState>((set) => ({
 
   fetchEvents: async () => {
     try {
-      const response = await axios.get("/api/fetch_events");
+      const response = await axios.get("/api/event/fetch_events");
       const events: AirsoftEvents[] = response.data.map((e: any) => ({
         ...e,
         startDate: new Date(e.startDate),
@@ -34,7 +34,7 @@ export const useEventStore = create<EventState>((set) => ({
   },
   addEvent: async (payload: AirsoftEventsInput): Promise<AirsoftEvents> => {
     try {
-      const response = await axios.post("/api/add_event", payload);
+      const response = await axios.post("/api/event/add_event", payload);
       const newEvent: AirsoftEvents = response.data;
 
       set((state) => ({ events: [...state.events, newEvent] }));
@@ -48,7 +48,7 @@ export const useEventStore = create<EventState>((set) => ({
     payload: AirsoftEventsInput & { id: string }
   ): Promise<AirsoftEvents> => {
     try {
-      const response = await axios.post("/api/update_event", payload);
+      const response = await axios.post("/api/event/update_event", payload);
       const updatedEvent: AirsoftEvents = response.data;
 
       set((state) => ({
@@ -64,7 +64,7 @@ export const useEventStore = create<EventState>((set) => ({
     }
   },
   deleteEvent: async (id) => {
-    await axios.delete("/api/delete_event", { data: { id } });
+    await axios.delete("/api/event/delete_event", { data: { id } });
 
     set((state) => ({
       events: state.events.filter((e) => e.id !== id),

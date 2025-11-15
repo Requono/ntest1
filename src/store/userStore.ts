@@ -46,7 +46,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
   logoutUser: async () => {
     try {
-      await axios.post("/api/logout_user");
+      await axios.post("/api/user/logout_user");
 
       set({
         userId: "",
@@ -60,7 +60,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
   fetchUser: async () => {
     try {
-      const response = await axios.get("/api/get_user");
+      const response = await axios.get("/api/user/get_user");
       if (response.data?.user) {
         set({
           userId: response.data.user.id,
@@ -89,7 +89,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         );
       }
 
-      const response = await axios.post("/api/update_user", {
+      const response = await axios.post("/api/user/update_user", {
         username: updatedFields.username,
         email: updatedFields.email,
         newHash,

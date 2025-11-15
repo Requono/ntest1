@@ -50,7 +50,7 @@ const Login = () => {
       }
       setLoading(true);
 
-      const response = await axios.post("/api/iterations", {
+      const response = await axios.post("/api/user/iterations", {
         email: values.email,
       });
 
@@ -63,7 +63,7 @@ const Login = () => {
       );
 
       try {
-        const loginResponse = await axios.post("/api/login_user", {
+        const loginResponse = await axios.post("/api/user/login_user", {
           email: values.email,
           hash: loginHash,
         });

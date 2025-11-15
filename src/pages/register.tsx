@@ -71,7 +71,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
       );
 
       try {
-        await axios.post("/api/create_user", {
+        await axios.post("/api/user/create_user", {
           username: values.username,
           email: values.email,
           hash: loginHash,
@@ -213,7 +213,7 @@ export default Register;
 
 export async function getServerSideProps() {
   try {
-    const response = await axios.post("/api/iterations");
+    const response = await axios.post("/api/user/iterations");
     return {
       props: {
         iterations: response.data.iterations,
