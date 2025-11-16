@@ -7,6 +7,7 @@ interface UserState {
   email: string | null;
   username: string | null;
   key: CryptoKey | null;
+  groupId: string | null;
 
   initializeUser: (
     user: { userId: string; email: string; username: string },
@@ -27,11 +28,12 @@ interface UserState {
   } | void>;
 }
 
-export const useUserStore = create<UserState>((set, get) => ({
+export const useUserStore = create<UserState>((set) => ({
   email: "",
   key: null,
   userId: "",
   username: "",
+  groupId: null,
 
   initializeUser: (
     user: { userId: string; email: string; username: string },
@@ -66,6 +68,7 @@ export const useUserStore = create<UserState>((set, get) => ({
           userId: response.data.user.id,
           username: response.data.user.username,
           email: response.data.user.email,
+          groupId: response.data.user.groupId,
         });
       }
     } catch (error) {

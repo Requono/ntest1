@@ -33,9 +33,9 @@ const Login = () => {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .required("Email is required field!")
+      .required("Email is required!")
       .email("Please enter a valid email address!"),
-    password: Yup.string().required("Password is a required field!"),
+    password: Yup.string().required("Password is a required!"),
   });
 
   const formik = useFormik({
