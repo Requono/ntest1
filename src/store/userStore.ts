@@ -2,12 +2,24 @@ import { deriveLoginHash } from "@/utils/crypto";
 import axios from "axios";
 import { create } from "zustand";
 
+interface GroupInvite {
+  id: string;
+  userId: string;
+  invitedBy: string;
+  createdAt: string;
+  group: {
+    id: string;
+    name: string;
+  };
+}
+
 interface UserState {
   userId: string | null;
   email: string | null;
   username: string | null;
   key: CryptoKey | null;
   groupId: string | null;
+  invites: GroupInvite[];
 
   createUser: (username: string, email: string, hash: string) => Promise<void>;
   initializeUser: (
@@ -27,14 +39,19 @@ interface UserState {
       email: string;
     };
   } | void>;
+
+  fetchInvites: () => Promise<void>;
+  acceptInvite: (inviteId: string) => Promise<void>;
+  declineInvite: (inviteId: string) => Promise<void>;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   email: "",
   key: null,
   userId: "",
   username: "",
   groupId: null,
+  invites: [] as GroupInvite[],
 
   createUser: async (username, email, hash) => {
     try {
@@ -125,6 +142,34 @@ export const useUserStore = create<UserState>((set) => ({
       return response.data;
     } catch (error) {
       console.error("Failed to update user profile:", error);
+    }
+  },
+
+  fetchInvites: async () => {
+    try {
+      const response = await axios.get("/api/group/invite/list_invites");
+      set({ invites: response.data });
+    } catch (error) {
+      console.error("fetchInvites() failed:", error);
+    }
+  },
+
+  acceptInvite: async (inviteId: string) => {
+    try {
+      await axios.post("/api/group/invite/accept", { inviteId });
+      await get().fetchUser();
+      await get().fetchInvites();
+    } catch (error) {
+      console.error("acceptInvite() failed:", error);
+    }
+  },
+
+  declineInvite: async (inviteId: string) => {
+    try {
+      await axios.post("/api/group/invite/decline", { inviteId });
+      await get().fetchInvites();
+    } catch (error) {
+      console.error("declineInvite() failed:", error);
     }
   },
 }));

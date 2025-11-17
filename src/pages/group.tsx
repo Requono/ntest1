@@ -18,13 +18,33 @@ import AddGroupModal from "@/components/CreateGroupModal";
 
 const Group = () => {
   const { groupId, fetchUser } = useUserStore();
-  const { fetchGroupMembers, fetchGroupData, members, currentGroup } =
-    useGroupStore();
+  const {
+    fetchGroupMembers,
+    fetchGroupData,
+    members,
+    currentGroup,
+    fetchUsersWithoutGroup,
+    usersWithoutGroup,
+    inviteUserToGroup,
+  } = useGroupStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [loading, setLoading] = useState(true);
+  const [invitedUsers, setInvitedUsers] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  const handleInvite = async (userId: string) => {
+    if (!groupId) return;
+    try {
+      await inviteUserToGroup(userId, groupId);
+      setInvitedUsers((prev) => ({ ...prev, [userId]: true }));
+    } catch (err) {
+      console.error("Failed to invite user:", err);
+    }
+  };
 
   useEffect(() => {
+    fetchUser();
     const load = async () => {
       setLoading(true);
       if (!groupId) {
@@ -33,12 +53,19 @@ const Group = () => {
       if (groupId) {
         await fetchGroupData(groupId);
         await fetchGroupMembers(groupId);
+        await fetchUsersWithoutGroup();
       }
       setLoading(false);
     };
 
     load();
-  }, [groupId, fetchUser, fetchGroupMembers]);
+  }, [
+    groupId,
+    fetchUser,
+    fetchGroupMembers,
+    fetchGroupData,
+    fetchUsersWithoutGroup,
+  ]);
 
   return (
     <>
@@ -82,7 +109,6 @@ const Group = () => {
               {members.length === 0 && (
                 <Text>No members found in this group yet.</Text>
               )}
-
               <VStack align="stretch" spacing={3}>
                 {members.map((member) => (
                   <Box
@@ -97,6 +123,40 @@ const Group = () => {
                 ))}
               </VStack>
             </>
+          )}
+          {!loading && groupId && members.length < 5 && (
+            <Box p={6} borderWidth={1} borderRadius="md" mt={2}>
+              <Heading mb={4}>Suggestions to Fill Your Team</Heading>
+              <Text fontSize="md" mb={4}>
+                Until you have 5 members, here are some users without a group:
+              </Text>
+              <VStack align="stretch" spacing={3}>
+                {usersWithoutGroup.length === 0 && (
+                  <Text>No users available.</Text>
+                )}
+                {usersWithoutGroup.map((user) => (
+                  <Flex
+                    key={user.id}
+                    p={4}
+                    borderWidth={1}
+                    borderRadius="md"
+                    bg="gray.50"
+                    justify="space-between"
+                    align="center"
+                  >
+                    <Text fontWeight="bold">{user.username}</Text>
+                    <Button
+                      size="sm"
+                      colorScheme="blue"
+                      onClick={() => handleInvite(user.id)}
+                      isDisabled={!!invitedUsers[user.id] || !groupId}
+                    >
+                      {invitedUsers[user.id] ? "Invited" : "Invite"}
+                    </Button>
+                  </Flex>
+                ))}
+              </VStack>
+            </Box>
           )}
         </Box>
       </Box>

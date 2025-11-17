@@ -3,33 +3,32 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddEditEventModal from "../components/AddEditEventModal";
+import InviteModal from "../components/InviteModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { EventModalMode } from "@/shared/enums/EventModalMode";
 import { useEventStore } from "@/store/eventStore";
 import Header from "@/components/Header";
 import { formatDateForInput } from "@/utils/formatDateForInput";
 import Footer from "@/components/Footer";
+import { useUserStore } from "@/store/userStore";
 
 const Calendar = () => {
   const localizer = momentLocalizer(moment);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-
+  const { invites, fetchInvites, acceptInvite, declineInvite } = useUserStore();
   const fetchAllEvents = useEventStore.getState().fetchEvents;
   const events = useEventStore((state) => state.events);
   useEffect(() => {
     fetchAllEvents();
   }, []);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const handleSelectSlot = (slotInfo: any) => {
     const startDateString = formatDateForInput(slotInfo.start);
     setSelectedDate(startDateString);
     setSelectedEvent(null);
     onOpen();
   };
-
   const handleSelectEvent = (event: any) => {
     const startDateString = formatDateForInput(event.startDate);
     const endDateString = formatDateForInput(event.endDate);
@@ -42,6 +41,16 @@ const Calendar = () => {
 
     onOpen();
   };
+
+  useEffect(() => {
+    fetchInvites();
+  }, []);
+
+  useEffect(() => {
+    if (invites.length > 0) {
+      onOpen();
+    }
+  }, [invites]);
 
   return (
     <>
@@ -73,6 +82,13 @@ const Calendar = () => {
         />
       )}
       <Footer />
+      <InviteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        invites={invites}
+        acceptInvite={acceptInvite}
+        declineInvite={declineInvite}
+      />
     </>
   );
 };
