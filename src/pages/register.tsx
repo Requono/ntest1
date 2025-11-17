@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { deriveLoginHash } from "@/utils/crypto";
+import { useUserStore } from "@/store/userStore";
 
 interface RegisterProps {
   iterations?: string;
@@ -29,6 +30,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const toast = useToast();
+  const { createUser } = useUserStore();
 
   const registerSchema = Yup.object().shape({
     username: Yup.string().required("Username field is required!"),
@@ -71,11 +73,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
       );
 
       try {
-        await axios.post("/api/user/create_user", {
-          username: values.username,
-          email: values.email,
-          hash: loginHash,
-        });
+        await createUser(values.username, values.email, loginHash);
 
         toast({
           title: "Successful registration!",

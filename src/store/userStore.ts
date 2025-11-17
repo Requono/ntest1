@@ -9,6 +9,7 @@ interface UserState {
   key: CryptoKey | null;
   groupId: string | null;
 
+  createUser: (username: string, email: string, hash: string) => Promise<void>;
   initializeUser: (
     user: { userId: string; email: string; username: string },
     key: CryptoKey
@@ -35,6 +36,24 @@ export const useUserStore = create<UserState>((set) => ({
   username: "",
   groupId: null,
 
+  createUser: async (username, email, hash) => {
+    try {
+      const response = await axios.post("/api/user/create_user", {
+        username,
+        email,
+        hash,
+      });
+
+      set({
+        userId: response.data.id,
+        username: response.data.username,
+        email: response.data.email,
+        groupId: response.data.groupId || null,
+      });
+    } catch (err) {
+      console.error("Failed to create user:", err);
+    }
+  },
   initializeUser: (
     user: { userId: string; email: string; username: string },
     key: CryptoKey
