@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { useUserStore } from "@/store/userStore";
+import { requireAuth } from "@/utils/requireAuth";
 import {
   Box,
   Button,
@@ -212,3 +213,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export const getServerSideProps = requireAuth();

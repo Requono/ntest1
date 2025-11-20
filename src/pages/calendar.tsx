@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import { formatDateForInput } from "@/utils/formatDateForInput";
 import Footer from "@/components/Footer";
 import { useUserStore } from "@/store/userStore";
+import { requireAuth } from "@/utils/requireAuth";
 
 const Calendar = () => {
   const localizer = momentLocalizer(moment);
@@ -94,3 +95,5 @@ const Calendar = () => {
 };
 
 export default Calendar;
+
+export const getServerSideProps = requireAuth();

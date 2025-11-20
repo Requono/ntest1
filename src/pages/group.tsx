@@ -15,6 +15,9 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AddGroupModal from "@/components/CreateGroupModal";
+import { requireAuth } from "@/utils/requireAuth";
+
+//TODO: group leadernek csoportos jelentkezés eseményre, esemény megjelenítése külön generált oldalon -> ehhez kell majd template
 
 const Group = () => {
   const { groupId, fetchUser } = useUserStore();
@@ -167,3 +170,5 @@ const Group = () => {
 };
 
 export default Group;
+
+export const getServerSideProps = requireAuth();
