@@ -1,7 +1,6 @@
 import { Box, Flex, Link, Text, Spacer } from "@chakra-ui/react";
 
 const Footer = () => {
-  //
   return (
     <Box
       color="black"

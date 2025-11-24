@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { deriveLoginHash } from "@/utils/crypto";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 
 interface RegisterProps {
   iterations?: string;
@@ -82,7 +82,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
           status: "success",
         });
 
-        router.push("/login");
+        router.push("/Login");
       } catch (error: any) {
         toast({
           title: error.response.data.username,
@@ -196,7 +196,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
               colorScheme="telegram"
               width="full"
               mt={2}
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/Login")}
             >
               Log in
             </Button>

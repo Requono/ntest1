@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddEditEventModal from "../components/AddEditEventModal";
 import InviteModal from "../components/InviteModal";
-import { useDisclosure } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import { EventModalMode } from "@/shared/enums/EventModalMode";
-import { useEventStore } from "@/store/eventStore";
+import { useEventStore } from "@/store/EventStore";
 import Header from "@/components/Header";
 import { formatDateForInput } from "@/utils/formatDateForInput";
 import Footer from "@/components/Footer";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 import { requireAuth } from "@/utils/requireAuth";
+import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
+require("moment/locale/hu.js");
 
 const Calendar = () => {
   const localizer = momentLocalizer(moment);
+  const router = useRouter();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const { invites, fetchInvites, acceptInvite, declineInvite } = useUserStore();
@@ -23,12 +27,21 @@ const Calendar = () => {
   useEffect(() => {
     fetchAllEvents();
   }, []);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEventOpen,
+    onOpen: onEventOpen,
+    onClose: onEventClose,
+  } = useDisclosure();
+  const {
+    isOpen: isInviteOpen,
+    onOpen: onInviteOpen,
+    onClose: onInviteClose,
+  } = useDisclosure();
   const handleSelectSlot = (slotInfo: any) => {
     const startDateString = formatDateForInput(slotInfo.start);
     setSelectedDate(startDateString);
     setSelectedEvent(null);
-    onOpen();
+    onEventOpen();
   };
   const handleSelectEvent = (event: any) => {
     const startDateString = formatDateForInput(event.startDate);
@@ -39,8 +52,7 @@ const Calendar = () => {
       startDate: startDateString,
       endDate: endDateString,
     });
-
-    onOpen();
+    router.push(`/event/${event.id}`);
   };
 
   useEffect(() => {
@@ -49,43 +61,61 @@ const Calendar = () => {
 
   useEffect(() => {
     if (invites.length > 0) {
-      onOpen();
+      onInviteOpen();
     }
   }, [invites]);
 
   return (
     <>
-      <Header />
-      <div style={{ margin: "100px" }}>
-        <ReactCalendar
-          selectable
-          localizer={localizer}
-          events={events}
-          startAccessor="startDate"
-          endAccessor="endDate"
-          style={{ height: "77vh" }}
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={handleSelectEvent}
-        />
-      </div>
-      {isOpen && (selectedDate || selectedEvent) && (
-        <AddEditEventModal
-          isOpen={isOpen}
-          onClose={onClose}
-          initialData={
-            selectedEvent
-              ? selectedEvent
-              : selectedDate
-              ? { startDate: selectedDate }
-              : undefined
-          }
-          mode={selectedEvent ? EventModalMode.EDIT : EventModalMode.ADD}
-        />
-      )}
-      <Footer />
+      <Box minH="100vh" display="flex" flexDirection="column">
+        <Header />
+        <Box
+          flex="1"
+          width="100%"
+          maxW="1500px"
+          mx="auto"
+          px={{ base: 4, md: 6 }}
+          py={4}
+        >
+          <ReactCalendar
+            selectable
+            localizer={localizer}
+            events={events}
+            startAccessor="startDate"
+            endAccessor="endDate"
+            style={{ height: "82vh", minHeight: "400px", width: "100%" }}
+            onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
+            messages={{
+              day: "Nap",
+              week: "Hét",
+              month: "Hónap",
+              today: "Ma",
+              previous: "Előző",
+              next: "Következő",
+            }}
+            views={{ day: true, week: true, month: true, agenda: false }}
+          />
+        </Box>
+        {isEventOpen && (selectedDate || selectedEvent) && (
+          <AddEditEventModal
+            isOpen={isEventOpen}
+            onClose={onEventClose}
+            initialData={
+              selectedEvent
+                ? selectedEvent
+                : selectedDate
+                ? { startDate: selectedDate }
+                : undefined
+            }
+            mode={selectedEvent ? EventModalMode.EDIT : EventModalMode.ADD}
+          />
+        )}
+        <Footer />
+      </Box>
       <InviteModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isInviteOpen}
+        onClose={onInviteClose}
         invites={invites}
         acceptInvite={acceptInvite}
         declineInvite={declineInvite}
@@ -96,4 +126,6 @@ const Calendar = () => {
 
 export default Calendar;
 
-export const getServerSideProps = requireAuth();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return requireAuth(context);
+}

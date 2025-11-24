@@ -1,4 +1,4 @@
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -81,7 +81,7 @@ const Login = () => {
           encryptionKey
         );
 
-        router.push("/calendar");
+        router.push("/Calendar");
       } catch (err: any) {
         toast({
           title: err.response.data.message,
@@ -158,7 +158,7 @@ const Login = () => {
             <Button
               variant="outline"
               colorScheme="telegram"
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/Register")}
             >
               Sign up
             </Button>

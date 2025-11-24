@@ -12,7 +12,7 @@ const Custom404 = () => {
           The page you’re looking for cannot be found. Start again from{" "}
           <ChakraLink
             as={NextLink}
-            href="/login"
+            href="/Login"
             color="blue.400"
             fontWeight="bold"
           >

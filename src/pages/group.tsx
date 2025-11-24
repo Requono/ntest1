@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useUserStore } from "@/store/userStore";
-import { useGroupStore } from "@/store/groupStore";
+import { useUserStore } from "@/store/UserStore";
+import { useGroupStore } from "@/store/GroupStore";
 import {
   Box,
   Heading,
@@ -16,6 +16,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AddGroupModal from "@/components/CreateGroupModal";
 import { requireAuth } from "@/utils/requireAuth";
+import { GetServerSidePropsContext } from "next";
 
 //TODO: group leadernek csoportos jelentkezés eseményre, esemény megjelenítése külön generált oldalon -> ehhez kell majd template
 
@@ -171,4 +172,6 @@ const Group = () => {
 
 export default Group;
 
-export const getServerSideProps = requireAuth();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return requireAuth(context);
+}

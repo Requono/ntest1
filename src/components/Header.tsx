@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, SettingsIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 import { useEffect } from "react";
 import UserGroups from "../icons/user-groups-icon.svg";
 
@@ -25,27 +25,32 @@ const Header = () => {
 
   const handleLogout = () => {
     logoutUser();
-    router.push("/login");
+    router.push("/Login");
   };
 
   return (
     <Box
       bg="green.600"
       color="white"
-      px={6}
+      px={{ base: 4, md: 6 }}
       py={3}
       position="sticky"
       top={0}
       zIndex={1000}
     >
-      <Flex align="center">
-        <Flex gap={4}>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        align={{ base: "stretch", md: "center" }}
+        gap={{ base: 2, md: 4 }}
+      >
+        <Flex gap={2} wrap="wrap">
           <Button
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/calendar")}
+            onClick={() => router.push("/Calendar")}
             leftIcon={<CalendarIcon />}
+            size="md"
           >
             Calendar
           </Button>
@@ -53,8 +58,9 @@ const Header = () => {
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/group")}
+            onClick={() => router.push("/Group")}
             leftIcon={<UserGroups width="16px" height="16px" fill="white" />}
+            size="md"
           >
             Group
           </Button>
@@ -62,8 +68,9 @@ const Header = () => {
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/profile")}
+            onClick={() => router.push("/Profile")}
             leftIcon={<SettingsIcon />}
+            size="md"
           >
             Profile
           </Button>
@@ -75,8 +82,9 @@ const Header = () => {
             rightIcon={<ChevronDownIcon />}
             variant="outline"
             colorScheme="white"
+            size="md"
           >
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" noOfLines={1}>
               {username ? "Logged in as " + username : "Logged in as User"}
             </Text>
           </MenuButton>

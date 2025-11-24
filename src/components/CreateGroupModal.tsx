@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useFormik } from "formik";
-import { useGroupStore } from "@/store/groupStore";
+import { useGroupStore } from "@/store/GroupStore";
 
 interface CreateGroupModalProps {
   isOpen: boolean;

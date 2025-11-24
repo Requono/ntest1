@@ -7,8 +7,10 @@ import { create } from "zustand";
 
 interface EventState {
   events: AirsoftEvents[];
+  currentEvent: AirsoftEvents | null;
 
   fetchEvents: () => Promise<void>;
+  fetchEvent: (eventId: string) => Promise<void>;
   addEvent: (payload: AirsoftEventsInput) => Promise<AirsoftEvents>;
   updateEvent: (
     event: AirsoftEventsInput & { id: string }
@@ -18,6 +20,7 @@ interface EventState {
 
 export const useEventStore = create<EventState>((set) => ({
   events: [],
+  currentEvent: null,
 
   fetchEvents: async () => {
     try {
@@ -30,6 +33,14 @@ export const useEventStore = create<EventState>((set) => ({
       set({ events });
     } catch (error) {
       console.error("Failed to fetch events:", error);
+    }
+  },
+  fetchEvent: async (eventId: string) => {
+    try {
+      const response = await axios.get(`/api/event/${eventId}`);
+      set({ currentEvent: response.data });
+    } catch (error) {
+      console.error("Failed to fetch event:", error);
     }
   },
   addEvent: async (payload: AirsoftEventsInput): Promise<AirsoftEvents> => {

@@ -19,12 +19,12 @@ import {
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { AirsoftEventType } from "@/shared/enums/AirsoftEventType";
-import { useEventStore } from "@/store/eventStore";
+import { useEventStore } from "@/store/EventStore";
 import {
   AirsoftEvents,
   AirsoftEventsInput,
 } from "@/shared/interfaces/AirsoftEventsInput";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 import { formatDateForInput } from "@/utils/formatDateForInput";
 
 interface AddEventModalProps {
@@ -265,7 +265,10 @@ const AddEventModal: React.FC<AddEventModalProps> = ({
               type="submit"
               isLoading={loading}
             >
-              {mode === EventModalMode.EDIT ? "Edit event" : "Add event"}
+              {mode === EventModalMode.EDIT &&
+              initialData?.createdById === userId
+                ? "Edit event"
+                : "Add event"}
             </Button>
           </ModalFooter>
         </form>

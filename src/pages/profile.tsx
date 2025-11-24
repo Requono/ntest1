@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/UserStore";
 import { requireAuth } from "@/utils/requireAuth";
 import {
   Box,
@@ -16,6 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
@@ -214,4 +215,6 @@ const Profile = () => {
 
 export default Profile;
 
-export const getServerSideProps = requireAuth();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return requireAuth(context);
+}
