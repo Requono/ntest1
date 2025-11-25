@@ -46,7 +46,7 @@ const EventPage = () => {
       >
         <Heading mb={3}>{currentEvent.title}</Heading>
         <Badge
-          colorScheme={currentEvent.visibility === "PUBLIC" ? "red" : "green"}
+          colorScheme={currentEvent.visibility === "PUBLIC" ? "green" : "red"}
           mb={4}
         >
           {currentEvent.visibility}

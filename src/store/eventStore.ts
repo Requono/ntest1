@@ -8,6 +8,7 @@ import { create } from "zustand";
 interface EventState {
   events: AirsoftEvents[];
   currentEvent: AirsoftEvents | null;
+  editingEvent: AirsoftEvents | null;
 
   fetchEvents: () => Promise<void>;
   fetchEvent: (eventId: string) => Promise<void>;
@@ -16,11 +17,16 @@ interface EventState {
     event: AirsoftEventsInput & { id: string }
   ) => Promise<AirsoftEvents>;
   deleteEvent: (id: string) => Promise<void>;
+  editing: {
+    setEditingEvent: (event: AirsoftEvents | null) => void;
+    clearEditingEvent: () => void;
+  };
 }
 
 export const useEventStore = create<EventState>((set) => ({
   events: [],
   currentEvent: null,
+  editingEvent: null,
 
   fetchEvents: async () => {
     try {
@@ -80,5 +86,9 @@ export const useEventStore = create<EventState>((set) => ({
     set((state) => ({
       events: state.events.filter((e) => e.id !== id),
     }));
+  },
+  editing: {
+    setEditingEvent: (event) => set({ editingEvent: event }),
+    clearEditingEvent: () => set({ editingEvent: null }),
   },
 }));

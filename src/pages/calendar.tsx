@@ -2,10 +2,8 @@ import { Calendar as ReactCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import AddEditEventModal from "../components/AddEditEventModal";
 import InviteModal from "../components/InviteModal";
 import { Box, useDisclosure } from "@chakra-ui/react";
-import { EventModalMode } from "@/shared/enums/EventModalMode";
 import { useEventStore } from "@/store/EventStore";
 import Header from "@/components/Header";
 import { formatDateForInput } from "@/utils/formatDateForInput";
@@ -13,47 +11,50 @@ import Footer from "@/components/Footer";
 import { useUserStore } from "@/store/UserStore";
 import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
-import { useRouter } from "next/router";
+import EventActionDialog from "@/components/EventActionDialog";
 require("moment/locale/hu.js");
 
 const Calendar = () => {
   const localizer = momentLocalizer(moment);
-  const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const { invites, fetchInvites, acceptInvite, declineInvite } = useUserStore();
-  const fetchAllEvents = useEventStore.getState().fetchEvents;
-  const events = useEventStore((state) => state.events);
-  useEffect(() => {
-    fetchAllEvents();
-  }, []);
-  const {
-    isOpen: isEventOpen,
-    onOpen: onEventOpen,
-    onClose: onEventClose,
-  } = useDisclosure();
+  const { events, fetchEvents } = useEventStore();
   const {
     isOpen: isInviteOpen,
     onOpen: onInviteOpen,
     onClose: onInviteClose,
   } = useDisclosure();
+  const {
+    isOpen: isDialogOpen,
+    onOpen: onDialogOpen,
+    onClose: onDialogClose,
+  } = useDisclosure();
+
   const handleSelectSlot = (slotInfo: any) => {
     const startDateString = formatDateForInput(slotInfo.start);
-    setSelectedDate(startDateString);
+    const endDateString = formatDateForInput(slotInfo.end);
+    setSelectedStartDate(startDateString);
+    setSelectedEndDate(endDateString);
     setSelectedEvent(null);
-    onEventOpen();
+    onDialogOpen();
   };
   const handleSelectEvent = (event: any) => {
     const startDateString = formatDateForInput(event.startDate);
     const endDateString = formatDateForInput(event.endDate);
-    setSelectedDate("");
+    setSelectedStartDate("");
     setSelectedEvent({
       ...event,
       startDate: startDateString,
       endDate: endDateString,
     });
-    router.push(`/event/${event.id}`);
+    onDialogOpen();
   };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     fetchInvites();
@@ -97,20 +98,6 @@ const Calendar = () => {
             views={{ day: true, week: true, month: true, agenda: false }}
           />
         </Box>
-        {isEventOpen && (selectedDate || selectedEvent) && (
-          <AddEditEventModal
-            isOpen={isEventOpen}
-            onClose={onEventClose}
-            initialData={
-              selectedEvent
-                ? selectedEvent
-                : selectedDate
-                ? { startDate: selectedDate }
-                : undefined
-            }
-            mode={selectedEvent ? EventModalMode.EDIT : EventModalMode.ADD}
-          />
-        )}
         <Footer />
       </Box>
       <InviteModal
@@ -119,6 +106,13 @@ const Calendar = () => {
         invites={invites}
         acceptInvite={acceptInvite}
         declineInvite={declineInvite}
+      />
+      <EventActionDialog
+        isOpen={isDialogOpen}
+        onClose={onDialogClose}
+        selectedEvent={selectedEvent}
+        selectedStartDate={selectedStartDate}
+        selectedEndDate={selectedEndDate}
       />
     </>
   );
