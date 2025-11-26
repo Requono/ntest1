@@ -22,8 +22,10 @@ export default async function handler(
   try {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
+      include: {
+        users: true,
+      },
     });
-    console.log(event);
 
     if (!event) {
       return res.status(404).json({ message: "Event not found" });

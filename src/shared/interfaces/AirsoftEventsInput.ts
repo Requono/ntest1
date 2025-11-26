@@ -29,4 +29,5 @@ export interface AirsoftEvents {
   status: string;
   gameType: AirsoftEventType;
   price: number;
+  users: { userId: string }[];
 }

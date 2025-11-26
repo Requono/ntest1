@@ -18,10 +18,16 @@ import AddGroupModal from "@/components/CreateGroupModal";
 import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
 
-//TODO: group leadernek csoportos jelentkezés eseményre, esemény megjelenítése külön generált oldalon -> ehhez kell majd template
+/**TODO:
+ * A: group leadernek csoportos jelentkezés eseményre
+ * B: csoportból való user eltávolítás
+ * C: csoportba való user keresése egy tömbből -> gombra nyomva meghívás -> inviteModal
+ * D: esemény keresés -> felső kereső mező kialakítása
+ * E: keresés eredménye -> klikk -> event megnyitása
+ */
 
 const Group = () => {
-  const { groupId, fetchUser } = useUserStore();
+  const { userId, groupId, fetchUser } = useUserStore();
   const {
     fetchGroupMembers,
     fetchGroupData,
@@ -36,6 +42,7 @@ const Group = () => {
   const [invitedUsers, setInvitedUsers] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const isGroupCreator = currentGroup?.createdById === userId;
 
   const handleInvite = async (userId: string) => {
     if (!groupId) return;
@@ -128,7 +135,7 @@ const Group = () => {
               </VStack>
             </>
           )}
-          {!loading && groupId && members.length < 5 && (
+          {!loading && groupId && members.length < 5 && isGroupCreator && (
             <Box p={6} borderWidth={1} borderRadius="md" mt={2}>
               <Heading mb={4}>Suggestions to Fill Your Team</Heading>
               <Text fontSize="md" mb={4}>

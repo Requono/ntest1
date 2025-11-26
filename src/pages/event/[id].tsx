@@ -15,13 +15,20 @@ import { useEventStore } from "@/store/EventStore";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useUserStore } from "@/store/UserStore";
+import { useGroupStore } from "@/store/GroupStore";
 
 const EventPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { currentEvent, fetchEvent } = useEventStore();
+  const { currentEvent, fetchEvent, joinEvent, leaveEvent } = useEventStore();
+  const { userId } = useUserStore();
+  const { currentGroup } = useGroupStore();
+  const isGroupCreator = currentGroup?.createdById === userId;
   const [loading, setLoading] = useState(true);
+
+  const isJoined = currentEvent?.users?.some((u) => u.userId === userId);
 
   useEffect(() => {
     if (id && typeof id === "string") {
@@ -75,7 +82,7 @@ const EventPage = () => {
             <b>Game Type:</b> {currentEvent.gameType}
           </Text>
           <Text>
-            <b>Price:</b> ${currentEvent.price}
+            <b>Price:</b> {currentEvent.price} HUF
           </Text>
           <Text>
             <b>Status:</b> {currentEvent.status}
@@ -83,12 +90,36 @@ const EventPage = () => {
         </VStack>
         <Divider my={6} />
         <HStack spacing={4}>
-          <Button colorScheme="blue" size="lg">
-            Register Solo
-          </Button>
-          <Button colorScheme="teal" size="lg">
-            Register Group
-          </Button>
+          {!isJoined ? (
+            <Box style={{ display: "flex", gap: "1rem" }}>
+              <Button
+                colorScheme="green"
+                size="lg"
+                onClick={() => {
+                  joinEvent(currentEvent.id);
+                  router.push("/Calendar");
+                }}
+              >
+                Register Solo
+              </Button>
+              {isGroupCreator && (
+                <Button colorScheme="teal" size="lg">
+                  Register Group
+                </Button>
+              )}
+            </Box>
+          ) : (
+            <Button
+              colorScheme="red"
+              size="lg"
+              onClick={() => {
+                leaveEvent(currentEvent.id);
+                router.push("/Calendar");
+              }}
+            >
+              Leave Event
+            </Button>
+          )}
         </HStack>
         <Box mt={6}>
           <Button variant="ghost" onClick={() => router.push("/Calendar")}>

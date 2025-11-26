@@ -4,6 +4,7 @@ import {
 } from "@/shared/interfaces/AirsoftEventsInput";
 import axios from "axios";
 import { create } from "zustand";
+import { useUserStore } from "./UserStore";
 
 interface EventState {
   events: AirsoftEvents[];
@@ -21,6 +22,8 @@ interface EventState {
     setEditingEvent: (event: AirsoftEvents | null) => void;
     clearEditingEvent: () => void;
   };
+  joinEvent: (eventId: string) => Promise<void>;
+  leaveEvent: (eventId: string) => Promise<void>;
 }
 
 export const useEventStore = create<EventState>((set) => ({
@@ -44,7 +47,14 @@ export const useEventStore = create<EventState>((set) => ({
   fetchEvent: async (eventId: string) => {
     try {
       const response = await axios.get(`/api/event/${eventId}`);
-      set({ currentEvent: response.data });
+      set({
+        currentEvent: {
+          ...response.data,
+          users: response.data.users.map((user: any) => ({
+            userId: user.userId,
+          })),
+        },
+      });
     } catch (error) {
       console.error("Failed to fetch event:", error);
     }
@@ -90,5 +100,49 @@ export const useEventStore = create<EventState>((set) => ({
   editing: {
     setEditingEvent: (event) => set({ editingEvent: event }),
     clearEditingEvent: () => set({ editingEvent: null }),
+  },
+  joinEvent: async (eventId: string) => {
+    try {
+      await axios.post("/api/event/join_event", { eventId });
+      const userId = useUserStore.getState().userId;
+      if (!userId) return;
+
+      set((state) => {
+        const updatedEvents = state.events.map((event) =>
+          event.id === eventId
+            ? {
+                ...event,
+                users: [...(event.users || []), { userId: userId }],
+              }
+            : event
+        );
+
+        return { events: updatedEvents };
+      });
+    } catch (error) {
+      console.error("Failed to join event:", error);
+    }
+  },
+  leaveEvent: async (eventId: string) => {
+    try {
+      await axios.post("/api/event/leave_event", { eventId });
+      const userId = useUserStore.getState().userId;
+      if (!userId) return;
+
+      set((state) => {
+        const updatedEvents = state.events.map((event) =>
+          event.id === eventId
+            ? {
+                ...event,
+                users: event.users.filter((u: any) => u.userId !== userId),
+              }
+            : event
+        );
+
+        return { events: updatedEvents };
+      });
+    } catch (error) {
+      console.error("Failed to leave event:", error);
+    }
   },
 }));

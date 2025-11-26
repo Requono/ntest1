@@ -210,12 +210,18 @@ const AddEditEvent = () => {
             isInvalid={!!formik.errors.gameType && formik.touched.gameType}
           >
             <FormLabel>Game Type</FormLabel>
-            <Input
+            <Select
               name="gameType"
               value={formik.values.gameType}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-            />
+            >
+              {Object.values(AirsoftEventType).map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </Select>
             <FormErrorMessage>{formik.errors.gameType}</FormErrorMessage>
           </FormControl>
           <FormControl

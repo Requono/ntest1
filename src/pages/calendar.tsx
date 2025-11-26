@@ -19,7 +19,14 @@ const Calendar = () => {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const { invites, fetchInvites, acceptInvite, declineInvite } = useUserStore();
+  const {
+    groupId,
+    invites,
+    fetchUser,
+    fetchInvites,
+    acceptInvite,
+    declineInvite,
+  } = useUserStore();
   const { events, fetchEvents } = useEventStore();
   const {
     isOpen: isInviteOpen,
@@ -31,6 +38,7 @@ const Calendar = () => {
     onOpen: onDialogOpen,
     onClose: onDialogClose,
   } = useDisclosure();
+  const [userLoaded, setUserLoaded] = useState(false);
 
   const handleSelectSlot = (slotInfo: any) => {
     const startDateString = formatDateForInput(slotInfo.start);
@@ -53,6 +61,14 @@ const Calendar = () => {
   };
 
   useEffect(() => {
+    const loadUser = async () => {
+      await fetchUser();
+      setUserLoaded(true);
+    };
+    loadUser();
+  }, []);
+
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -61,10 +77,10 @@ const Calendar = () => {
   }, []);
 
   useEffect(() => {
-    if (invites.length > 0) {
+    if (userLoaded && invites.length > 0 && !groupId) {
       onInviteOpen();
     }
-  }, [invites]);
+  }, [invites, groupId]);
 
   return (
     <>
