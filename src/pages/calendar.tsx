@@ -82,6 +82,14 @@ const Calendar = () => {
     }
   }, [invites, groupId]);
 
+  /** TODO:
+   * eventPropGetter={(event) => {
+    const backgroundColor = event.allday ? 'yellow' : 'blue';
+    return { style: { backgroundColor } }
+  }}
+  ezzel lehet majd változtatni az event színét attól függően h regisztrált-e a user rá -> BIG
+*/
+
   return (
     <>
       <Box minH="100vh" display="flex" flexDirection="column">

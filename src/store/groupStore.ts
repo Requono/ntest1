@@ -17,6 +17,7 @@ interface GroupState {
   fetchGroupMembers: (groupId: string) => Promise<void>;
   fetchUsersWithoutGroup: () => Promise<void>;
   inviteUserToGroup: (userId: string, groupId: string) => Promise<void>;
+  removeUserFromGroup: (userId: string, groupId: string) => Promise<void>;
 }
 
 export const useGroupStore = create<GroupState>((set) => ({
@@ -68,6 +69,21 @@ export const useGroupStore = create<GroupState>((set) => ({
       });
     } catch (error) {
       console.error("Failed to invite user:", error);
+    }
+  },
+  removeUserFromGroup: async (userId: string, groupId: string) => {
+    try {
+      await axios.post("/api/group/remove_user", {
+        userIdToRemove: userId,
+        groupId,
+      });
+
+      const updated = await axios.get(
+        `/api/group/${groupId}/fetch_group_members`
+      );
+      set({ members: updated.data });
+    } catch (error) {
+      console.error("Failed to remove member:", error);
     }
   },
   fetchUsersWithoutGroup: async () => {

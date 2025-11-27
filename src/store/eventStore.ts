@@ -5,6 +5,7 @@ import {
 import axios from "axios";
 import { create } from "zustand";
 import { useUserStore } from "./UserStore";
+import { useGroupStore } from "./GroupStore";
 
 interface EventState {
   events: AirsoftEvents[];
@@ -23,6 +24,7 @@ interface EventState {
     clearEditingEvent: () => void;
   };
   joinEvent: (eventId: string) => Promise<void>;
+  joinGroupEvent: (eventId: string, userId: string[]) => Promise<void>;
   leaveEvent: (eventId: string) => Promise<void>;
 }
 
@@ -121,6 +123,33 @@ export const useEventStore = create<EventState>((set) => ({
       });
     } catch (error) {
       console.error("Failed to join event:", error);
+    }
+  },
+  joinGroupEvent: async (eventId: string, userIds: string[]) => {
+    try {
+      const currentGroup = useGroupStore.getState().currentGroup;
+      await axios.post("/api/event/join_event_as_group", {
+        eventId,
+        groupId: currentGroup?.id,
+        userIds,
+      });
+
+      set((state) => {
+        const updatedEvents = state.events.map((event) =>
+          event.id === eventId
+            ? {
+                ...event,
+                users: [
+                  ...event.users,
+                  ...userIds.map((uid) => ({ userId: uid })),
+                ],
+              }
+            : event
+        );
+        return { events: updatedEvents };
+      });
+    } catch (error) {
+      console.error("Failed to group join:", error);
     }
   },
   leaveEvent: async (eventId: string) => {

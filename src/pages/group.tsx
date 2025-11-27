@@ -19,8 +19,8 @@ import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
 
 /**TODO:
- * A: group leadernek csoportos jelentkezés eseményre
- * B: csoportból való user eltávolítás
+ * A: group leadernek csoportos jelentkezés eseményre -> DONE
+ * B: csoportból való user eltávolítás -> DONE
  * C: csoportba való user keresése egy tömbből -> gombra nyomva meghívás -> inviteModal
  * D: esemény keresés -> felső kereső mező kialakítása
  * E: keresés eredménye -> klikk -> event megnyitása
@@ -36,6 +36,7 @@ const Group = () => {
     fetchUsersWithoutGroup,
     usersWithoutGroup,
     inviteUserToGroup,
+    removeUserFromGroup,
   } = useGroupStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(true);
@@ -122,15 +123,29 @@ const Group = () => {
               )}
               <VStack align="stretch" spacing={3}>
                 {members.map((member) => (
-                  <Box
+                  <Flex
                     key={member.id}
                     p={4}
                     borderWidth={1}
                     borderRadius="md"
                     bg="gray.50"
+                    justify="space-between"
+                    align="center"
                   >
                     <Text fontWeight="bold">{member.username}</Text>
-                  </Box>
+
+                    {isGroupCreator && member.id !== userId && (
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        onClick={() =>
+                          removeUserFromGroup(member.id, currentGroup!.id)
+                        }
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </Flex>
                 ))}
               </VStack>
             </>

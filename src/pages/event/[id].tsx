@@ -7,6 +7,7 @@ import {
   VStack,
   HStack,
   Divider,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
@@ -17,16 +18,23 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useUserStore } from "@/store/UserStore";
 import { useGroupStore } from "@/store/GroupStore";
+import JoinEventAsGroupModal from "@/components/JoinEventAsGroupModal";
 
 const EventPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { currentEvent, fetchEvent, joinEvent, leaveEvent } = useEventStore();
+  const { currentEvent, fetchEvent, joinEvent, joinGroupEvent, leaveEvent } =
+    useEventStore();
   const { userId } = useUserStore();
-  const { currentGroup } = useGroupStore();
+  const { currentGroup, members } = useGroupStore();
   const isGroupCreator = currentGroup?.createdById === userId;
   const [loading, setLoading] = useState(true);
+  const {
+    isOpen: isGroupModalOpen,
+    onOpen: onGroupModalOpen,
+    onClose: onGroupModalClose,
+  } = useDisclosure();
 
   const isJoined = currentEvent?.users?.some((u) => u.userId === userId);
 
@@ -103,7 +111,7 @@ const EventPage = () => {
                 Register Solo
               </Button>
               {isGroupCreator && (
-                <Button colorScheme="teal" size="lg">
+                <Button colorScheme="teal" size="lg" onClick={onGroupModalOpen}>
                   Register Group
                 </Button>
               )}
@@ -128,6 +136,15 @@ const EventPage = () => {
         </Box>
       </Box>
       <Footer />
+      <JoinEventAsGroupModal
+        isOpen={isGroupModalOpen}
+        onClose={onGroupModalClose}
+        members={members || []}
+        onSubmit={(userIds: string[]) => {
+          joinGroupEvent(currentEvent.id, userIds);
+          router.push("/Calendar");
+        }}
+      />
     </>
   );
 };
