@@ -12,8 +12,10 @@ import {
 import { ChevronDownIcon, SettingsIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/store/UserStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import UserGroups from "../icons/user-groups-icon.svg";
+import { useEventStore } from "@/store/EventStore";
+import EventSearchBar from "./EventSearchBar";
 
 const Header = () => {
   const router = useRouter();
@@ -22,10 +24,40 @@ const Header = () => {
     if (!username) return;
   }, [username]);
   const logoutUser = useUserStore((state) => state.logoutUser);
-
   const handleLogout = () => {
     logoutUser();
     router.push("/Login");
+  };
+
+  const { events } = useEventStore();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      setDropdownOpen(false);
+      return;
+    }
+
+    const q = query.toLowerCase();
+
+    const filtered = events.filter(
+      (event) =>
+        event.title.toLowerCase().includes(q) ||
+        event.location.toLowerCase().includes(q) ||
+        event.gameType.toLowerCase().includes(q)
+    );
+
+    setResults(filtered);
+    setDropdownOpen(true);
+  }, [query, events]);
+
+  const handleSelectEvent = (id: string) => {
+    setDropdownOpen(false);
+    setQuery("");
+    router.push(`/event/${id}`);
   };
 
   return (
@@ -75,6 +107,15 @@ const Header = () => {
             Profile
           </Button>
         </Flex>
+        <Spacer />
+        <EventSearchBar
+          query={query}
+          setQuery={setQuery}
+          results={results}
+          isDropdownOpen={isDropdownOpen}
+          setDropdownOpen={setDropdownOpen}
+          handleSelectEvent={handleSelectEvent}
+        />
         <Spacer />
         <Menu>
           <MenuButton

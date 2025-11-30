@@ -144,7 +144,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       console.error("Failed to update user profile:", error);
     }
   },
-
   fetchInvites: async () => {
     try {
       const response = await axios.get("/api/group/invite/list_invites");
@@ -153,7 +152,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       console.error("fetchInvites() failed:", error);
     }
   },
-
   acceptInvite: async (inviteId: string) => {
     try {
       await axios.post("/api/group/invite/accept", { inviteId });
@@ -163,7 +161,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       console.error("acceptInvite() failed:", error);
     }
   },
-
   declineInvite: async (inviteId: string) => {
     try {
       await axios.post("/api/group/invite/decline", { inviteId });

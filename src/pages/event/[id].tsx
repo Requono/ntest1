@@ -37,6 +37,10 @@ const EventPage = () => {
   } = useDisclosure();
 
   const isJoined = currentEvent?.users?.some((u) => u.userId === userId);
+  const registeredPlayers = currentEvent?.users?.length || 0;
+  const maxPlayers = Number(currentEvent?.maxPlayers) || 0;
+  const maxPlayersText = `${registeredPlayers}/${maxPlayers}`;
+  const shouldRegisteringBeEnabled = registeredPlayers === maxPlayers;
 
   useEffect(() => {
     if (id && typeof id === "string") {
@@ -50,89 +54,94 @@ const EventPage = () => {
   return (
     <>
       <Header />
-      <Box
-        maxW="700px"
-        mx="auto"
-        mt={10}
-        p={6}
-        borderWidth="1px"
-        borderRadius="lg"
-        bg="white"
-      >
-        <Heading mb={3}>{currentEvent.title}</Heading>
-        <Badge
-          colorScheme={currentEvent.visibility === "PUBLIC" ? "green" : "red"}
-          mb={4}
+      <Box minH="1150px">
+        <Box
+          maxW="700px"
+          mx="auto"
+          mt={10}
+          p={6}
+          borderWidth="1px"
+          borderRadius="lg"
+          bg="white"
         >
-          {currentEvent.visibility}
-        </Badge>
-        <Text fontSize="lg" fontWeight="medium" mb={2}>
-          <b>Location:</b> {currentEvent.location}
-        </Text>
-        <Text color="gray.600" mb={4}>
-          <b>Description:</b> {currentEvent.description}
-        </Text>
-        <Divider mb={4} />
-        <VStack align="start" spacing={2}>
-          <Text>
-            <b>Start:</b> {new Date(currentEvent.startDate).toLocaleString()}
+          <Heading mb={3}>{currentEvent.title}</Heading>
+          <Badge
+            colorScheme={currentEvent.visibility === "PUBLIC" ? "green" : "red"}
+            mb={4}
+          >
+            {currentEvent.visibility}
+          </Badge>
+          <Text fontSize="lg" fontWeight="medium" mb={2}>
+            <b>Location:</b> {currentEvent.location}
           </Text>
-          <Text>
-            <b>End:</b> {new Date(currentEvent.endDate).toLocaleString()}
+          <Text color="gray.600" mb={4}>
+            <b>Description:</b> {currentEvent.description}
           </Text>
-          <Text>
-            <b>Max Players:</b>{" "}
-            {
-              currentEvent.maxPlayers /**TODO: itt az eddigi regisztráltak / max player lesz majd */
-            }
-          </Text>
-          <Text>
-            <b>Game Type:</b> {currentEvent.gameType}
-          </Text>
-          <Text>
-            <b>Price:</b> {currentEvent.price} HUF
-          </Text>
-          <Text>
-            <b>Status:</b> {currentEvent.status}
-          </Text>
-        </VStack>
-        <Divider my={6} />
-        <HStack spacing={4}>
-          {!isJoined ? (
-            <Box style={{ display: "flex", gap: "1rem" }}>
+          <Divider mb={4} />
+          <VStack align="start" spacing={2}>
+            <Text>
+              <b>Start:</b> {new Date(currentEvent.startDate).toLocaleString()}
+            </Text>
+            <Text>
+              <b>End:</b> {new Date(currentEvent.endDate).toLocaleString()}
+            </Text>
+            <Text>
+              <b>Max Players:</b> {maxPlayersText}
+            </Text>
+            <Text>
+              <b>Game Type:</b> {currentEvent.gameType}
+            </Text>
+            <Text>
+              <b>Price:</b> {currentEvent.price} HUF
+            </Text>
+            <Text>
+              <b>Status:</b> {currentEvent.status}
+            </Text>
+          </VStack>
+          <Divider my={6} />
+          <HStack spacing={4}>
+            {!isJoined ? (
+              <Box style={{ display: "flex", gap: "1rem" }}>
+                <Button
+                  colorScheme="green"
+                  size="lg"
+                  onClick={() => {
+                    joinEvent(currentEvent.id);
+                    router.push("/Calendar");
+                  }}
+                  isDisabled={shouldRegisteringBeEnabled}
+                >
+                  Register Solo
+                </Button>
+                {isGroupCreator && (
+                  <Button
+                    colorScheme="teal"
+                    size="lg"
+                    onClick={onGroupModalOpen}
+                    isDisabled={shouldRegisteringBeEnabled}
+                  >
+                    Register Group
+                  </Button>
+                )}
+              </Box>
+            ) : (
               <Button
-                colorScheme="green"
+                colorScheme="red"
                 size="lg"
                 onClick={() => {
-                  joinEvent(currentEvent.id);
+                  leaveEvent(currentEvent.id);
                   router.push("/Calendar");
                 }}
               >
-                Register Solo
+                Leave Event
               </Button>
-              {isGroupCreator && (
-                <Button colorScheme="teal" size="lg" onClick={onGroupModalOpen}>
-                  Register Group
-                </Button>
-              )}
-            </Box>
-          ) : (
-            <Button
-              colorScheme="red"
-              size="lg"
-              onClick={() => {
-                leaveEvent(currentEvent.id);
-                router.push("/Calendar");
-              }}
-            >
-              Leave Event
+            )}
+          </HStack>
+          <Box mt={6}>
+            <Button variant="ghost" onClick={() => router.push("/Calendar")}>
+              Back to Calendar
             </Button>
-          )}
-        </HStack>
-        <Box mt={6}>
-          <Button variant="ghost" onClick={() => router.push("/Calendar")}>
-            Back to Calendar
-          </Button>
+          </Box>
         </Box>
       </Box>
       <Footer />

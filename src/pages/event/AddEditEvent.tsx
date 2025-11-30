@@ -107,165 +107,173 @@ const AddEditEvent = () => {
   return (
     <>
       <Header />
-      <Box
-        maxW="700px"
-        mx="auto"
-        mt={10}
-        p={6}
-        borderWidth="1px"
-        borderRadius="lg"
-        bg="white"
-      >
-        <HStack justify="space-between" mb={4}>
-          <Heading>{isEdit ? "Edit Event" : "Create Event"}</Heading>
-          <Badge
-            colorScheme={
-              formik.values.visibility === "PUBLIC" ? "green" : "red"
-            }
-          >
-            {formik.values.visibility}
-          </Badge>
-        </HStack>
-        <VStack spacing={5} align="stretch">
-          <FormControl
-            isInvalid={!!formik.errors.title && formik.touched.title}
-          >
-            <FormLabel>Title</FormLabel>
-            <Input
-              name="title"
-              value={formik.values.title}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <FormErrorMessage>{formik.errors.title}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={
-              !!formik.errors.description && formik.touched.description
-            }
-          >
-            <FormLabel>Description</FormLabel>
-            <Textarea
-              name="description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
-          </FormControl>
-          <HStack spacing={4}>
-            <FormControl
-              isInvalid={!!formik.errors.startDate && formik.touched.startDate}
+      <Box minH="1150px">
+        <Box
+          maxW="700px"
+          mx="auto"
+          mt={10}
+          p={6}
+          borderWidth="1px"
+          borderRadius="lg"
+          bg="white"
+        >
+          <HStack justify="space-between" mb={4}>
+            <Heading>{isEdit ? "Edit Event" : "Create Event"}</Heading>
+            <Badge
+              colorScheme={
+                formik.values.visibility === "PUBLIC" ? "green" : "red"
+              }
             >
-              <FormLabel>Start Date</FormLabel>
-              <Input
-                type="datetime-local"
-                name="startDate"
-                value={formatDateForInput(formik.values.startDate)}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <FormErrorMessage>{formik.errors.startDate}</FormErrorMessage>
-            </FormControl>
-            <FormControl
-              isInvalid={!!formik.errors.endDate && formik.touched.endDate}
-            >
-              <FormLabel>End Date</FormLabel>
-              <Input
-                type="datetime-local"
-                name="endDate"
-                value={formatDateForInput(formik.values.endDate)}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <FormErrorMessage>{formik.errors.endDate}</FormErrorMessage>
-            </FormControl>
+              {formik.values.visibility}
+            </Badge>
           </HStack>
-          <FormControl
-            isInvalid={!!formik.errors.location && formik.touched.location}
-          >
-            <FormLabel>Location</FormLabel>
-            <Input
-              name="location"
-              value={formik.values.location}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <FormErrorMessage>{formik.errors.location}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={!!formik.errors.maxPlayers && formik.touched.maxPlayers}
-          >
-            <FormLabel>Max Players</FormLabel>
-            <Input
-              type="number"
-              name="maxPlayers"
-              value={formik.values.maxPlayers}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <FormErrorMessage>{formik.errors.maxPlayers}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={!!formik.errors.gameType && formik.touched.gameType}
-          >
-            <FormLabel>Game Type</FormLabel>
-            <Select
-              name="gameType"
-              value={formik.values.gameType}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+          <VStack spacing={5} align="stretch">
+            <FormControl
+              isInvalid={!!formik.errors.title && formik.touched.title}
             >
-              {Object.values(AirsoftEventType).map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>{formik.errors.gameType}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={!!formik.errors.price && formik.touched.price}
-          >
-            <FormLabel>Price (HUF)</FormLabel>
-            <Input
-              type="number"
-              name="price"
-              value={formik.values.price}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={!!formik.errors.visibility && formik.touched.visibility}
-          >
-            <FormLabel>Visibility</FormLabel>
-            <Select
-              name="visibility"
-              value={formik.values.visibility}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              <FormLabel>Title</FormLabel>
+              <Input
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.title}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={
+                !!formik.errors.description && formik.touched.description
+              }
             >
-              <option value="PUBLIC">PUBLIC</option>
-              <option value="PRIVATE">PRIVATE</option>
-            </Select>
-            <FormErrorMessage>{formik.errors.visibility}</FormErrorMessage>
-          </FormControl>
-        </VStack>
-        <Divider my={6} />
-        <HStack spacing={4}>
-          <Button
-            colorScheme="blue"
-            size="lg"
-            onClick={() => formik.handleSubmit()}
-          >
-            {isEdit ? "Save Changes" : "Create Event"}
-          </Button>
-          <Button variant="ghost" size="lg" onClick={handleCancel}>
-            Cancel
-          </Button>
-        </HStack>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
+            </FormControl>
+            <HStack spacing={4}>
+              <FormControl
+                isInvalid={
+                  !!formik.errors.startDate && formik.touched.startDate
+                }
+              >
+                <FormLabel>Start Date</FormLabel>
+                <Input
+                  type="datetime-local"
+                  name="startDate"
+                  value={formatDateForInput(formik.values.startDate)}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <FormErrorMessage>{formik.errors.startDate}</FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isInvalid={!!formik.errors.endDate && formik.touched.endDate}
+              >
+                <FormLabel>End Date</FormLabel>
+                <Input
+                  type="datetime-local"
+                  name="endDate"
+                  value={formatDateForInput(formik.values.endDate)}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <FormErrorMessage>{formik.errors.endDate}</FormErrorMessage>
+              </FormControl>
+            </HStack>
+            <FormControl
+              isInvalid={!!formik.errors.location && formik.touched.location}
+            >
+              <FormLabel>Location</FormLabel>
+              <Input
+                name="location"
+                value={formik.values.location}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.location}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={
+                !!formik.errors.maxPlayers && formik.touched.maxPlayers
+              }
+            >
+              <FormLabel>Max Players</FormLabel>
+              <Input
+                type="number"
+                name="maxPlayers"
+                value={formik.values.maxPlayers}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.maxPlayers}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!formik.errors.gameType && formik.touched.gameType}
+            >
+              <FormLabel>Game Type</FormLabel>
+              <Select
+                name="gameType"
+                value={formik.values.gameType}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                {Object.values(AirsoftEventType).map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </Select>
+              <FormErrorMessage>{formik.errors.gameType}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!formik.errors.price && formik.touched.price}
+            >
+              <FormLabel>Price (HUF)</FormLabel>
+              <Input
+                type="number"
+                name="price"
+                value={formik.values.price}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={
+                !!formik.errors.visibility && formik.touched.visibility
+              }
+            >
+              <FormLabel>Visibility</FormLabel>
+              <Select
+                name="visibility"
+                value={formik.values.visibility}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="PUBLIC">PUBLIC</option>
+                <option value="PRIVATE">PRIVATE</option>
+              </Select>
+              <FormErrorMessage>{formik.errors.visibility}</FormErrorMessage>
+            </FormControl>
+          </VStack>
+          <Divider my={6} />
+          <HStack spacing={4}>
+            <Button
+              colorScheme="blue"
+              size="lg"
+              onClick={() => formik.handleSubmit()}
+            >
+              {isEdit ? "Save Changes" : "Create Event"}
+            </Button>
+            <Button variant="ghost" size="lg" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </HStack>
+        </Box>
       </Box>
       <Footer />
     </>
