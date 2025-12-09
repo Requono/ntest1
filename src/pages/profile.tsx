@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { useUserStore } from "@/store/UserStore";
+import { useUserStore } from "@/store/userStore";
 import { requireAuth } from "@/utils/requireAuth";
 import {
   Box,

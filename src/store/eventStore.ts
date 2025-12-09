@@ -4,8 +4,8 @@ import {
 } from "@/shared/interfaces/AirsoftEventsInput";
 import axios from "axios";
 import { create } from "zustand";
-import { useUserStore } from "./UserStore";
-import { useGroupStore } from "./GroupStore";
+import { useUserStore } from "./userStore";
+import { useGroupStore } from "./groupStore";
 
 interface EventState {
   events: AirsoftEvents[];

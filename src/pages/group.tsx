@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useUserStore } from "@/store/UserStore";
-import { useGroupStore } from "@/store/GroupStore";
+import { useUserStore } from "@/store/userStore";
+import { useGroupStore } from "@/store/groupStore";
 import {
   Box,
   Heading,

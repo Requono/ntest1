@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { deriveLoginHash } from "@/utils/crypto";
-import { useUserStore } from "@/store/UserStore";
+import { useUserStore } from "@/store/userStore";
 
 interface RegisterProps {
   iterations?: string;

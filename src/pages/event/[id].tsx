@@ -12,12 +12,12 @@ import {
 import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { useEventStore } from "@/store/EventStore";
+import { useEventStore } from "@/store/eventStore";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useUserStore } from "@/store/UserStore";
-import { useGroupStore } from "@/store/GroupStore";
+import { useUserStore } from "@/store/userStore";
+import { useGroupStore } from "@/store/groupStore";
 import JoinEventAsGroupModal from "@/components/JoinEventAsGroupModal";
 
 const EventPage = () => {

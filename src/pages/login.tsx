@@ -1,4 +1,4 @@
-import { useUserStore } from "@/store/UserStore";
+import { useUserStore } from "@/store/userStore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import * as Yup from "yup";

@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useRouter } from "next/router";
-import { useEventStore } from "@/store/EventStore";
-import { useUserStore } from "@/store/UserStore";
+import { useEventStore } from "@/store/eventStore";
+import { useUserStore } from "@/store/userStore";
 
 interface EventActionDialogProps {
   isOpen: boolean;

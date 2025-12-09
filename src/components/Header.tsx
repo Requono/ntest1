@@ -11,10 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, SettingsIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { useUserStore } from "@/store/UserStore";
+import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
 import UserGroups from "../icons/user-groups-icon.svg";
-import { useEventStore } from "@/store/EventStore";
+import { useEventStore } from "@/store/eventStore";
 import EventSearchBar from "./EventSearchBar";
 
 const Header = () => {
