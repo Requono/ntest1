@@ -44,7 +44,7 @@ const GroupUserSearch: React.FC<GroupUserSearchProps> = ({
           <SearchIcon color="gray.200" />
         </InputLeftElement>
         <Input
-          placeholder="Invite user..."
+          placeholder="Felhasználó meghívása..."
           bg="white"
           color="black"
           value={query}
@@ -60,7 +60,7 @@ const GroupUserSearch: React.FC<GroupUserSearchProps> = ({
       {isDropdownOpen && users.length > 0 && (
         <Box
           position="absolute"
-          top="45px"
+          top="75px"
           left={0}
           right={0}
           bg="white"
@@ -90,7 +90,7 @@ const GroupUserSearch: React.FC<GroupUserSearchProps> = ({
                   mt={2}
                   onClick={() => handleInvite(user.id)}
                 >
-                  Invite to group
+                  Meghívás csoportba
                 </Button>
               </Box>
             ))}

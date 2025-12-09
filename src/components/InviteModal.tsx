@@ -38,27 +38,28 @@ const InviteModal: React.FC<InviteModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Group Invitations</ModalHeader>
+        <ModalHeader>Csoport meghívások</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack align="stretch" spacing={4}>
             {invites.map((invite) => (
               <Box key={invite.id} p={4} borderWidth={1} borderRadius="md">
                 <Text mb={2}>
-                  You have been invited to join: <b>{invite.group.name}</b>
+                  Meghívtak, hogy csatlakozz a <b>{invite.group.name}</b>{" "}
+                  csoportba
                 </Text>
                 <Button
                   colorScheme="blue"
                   mr={2}
                   onClick={() => acceptInvite(invite.id)}
                 >
-                  Accept
+                  Elfogadás
                 </Button>
                 <Button
                   colorScheme="red"
                   onClick={() => declineInvite(invite.id)}
                 >
-                  Decline
+                  Elutasítás
                 </Button>
               </Box>
             ))}

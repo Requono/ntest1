@@ -33,9 +33,9 @@ const Login = () => {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .required("Email is required!")
-      .email("Please enter a valid email address!"),
-    password: Yup.string().required("Password is a required!"),
+      .required("E-mail cím megadása kötelező!")
+      .email("Egy helyes e-mail címet adj meg!"),
+    password: Yup.string().required("Jelszó megadása kötelező!"),
   });
 
   const formik = useFormik({
@@ -112,7 +112,7 @@ const Login = () => {
         boxShadow="md"
       >
         <Heading size="md" mb={6} textAlign="center">
-          Welcome back!
+          Üdv újra!
         </Heading>
         <form onSubmit={formik.handleSubmit}>
           <VStack spacing={4} align="stretch">
@@ -132,7 +132,7 @@ const Login = () => {
             <FormControl
               isInvalid={!!formik.errors.password && !!formik.touched.password}
             >
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Jelszó</FormLabel>
               <InputGroup>
                 <Input
                   name="password"
@@ -143,24 +143,24 @@ const Login = () => {
                 />
                 <InputRightElement width="4.5rem">
                   <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
-                    {show ? "Hide" : "Show"}
+                    {show ? "Elrejt" : "Mutat"}
                   </Button>
                 </InputRightElement>
               </InputGroup>
               <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
             </FormControl>
             <Button type="submit" colorScheme="blue" width="full" mt={4}>
-              {loading ? <Spinner /> : "Log in"}
+              {loading ? <Spinner /> : "Bejelentkezés"}
             </Button>
             <Flex align="center" justify="center" mt={3} mb={2}>
-              <Box>or if you don't have an account:</Box>
+              <Box>Vagy ha még nincs felhasználód:</Box>
             </Flex>
             <Button
               variant="outline"
               colorScheme="telegram"
               onClick={() => router.push("/Register")}
             >
-              Sign up
+              Regisztráció
             </Button>
           </VStack>
         </form>

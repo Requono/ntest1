@@ -26,15 +26,15 @@ const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const profileSchema = Yup.object().shape({
-    email: Yup.string().email("Please enter a valid e-mail"),
+    email: Yup.string().email("Egy rendes e-mail címet adj meg!"),
     newPassword: Yup.string()
-      .min(8, "Not long enough!")
-      .matches(/[a-z]/, "Password must contain at least a small letter!")
-      .matches(/[A-Z]/, "Password must contain at least a capital letter!")
-      .matches(/[0-9]/, "Password must contain at least a number!"),
+      .min(8, "Nem elég hosszú!")
+      .matches(/[a-z]/, "Jelszónak tartalmaznia kell legalább 1 kisbetűt!")
+      .matches(/[A-Z]/, "Jelszónak tartalmaznia kell legalább 1 nagybetűt!")
+      .matches(/[0-9]/, "Jelszónak tartalmaznia kell legalább 1 számot!"),
     confirmPassword: Yup.string().test({
       name: "is-the-same",
-      message: "Password does not match!",
+      message: "Jelszavak nem egyeznek!",
       test: (value, context) => {
         return value === context.parent.newPassword;
       },
@@ -62,7 +62,7 @@ const Profile = () => {
           newPassword: values.newPassword || undefined,
         });
         toast({
-          title: "Profile updated",
+          title: "Profil módosítva",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -72,7 +72,7 @@ const Profile = () => {
         });
       } catch (error) {
         toast({
-          title: "Failed to update profile",
+          title: "Profil módosítása nem sikerült",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -93,7 +93,7 @@ const Profile = () => {
           borderWidth={1}
           borderRadius="md"
         >
-          <Heading mb={6}>Profile Settings</Heading>
+          <Heading mb={6}>Profil beállítások</Heading>
           <form onSubmit={formik.handleSubmit}>
             <VStack spacing={4} align="stretch">
               <FormControl
@@ -101,7 +101,7 @@ const Profile = () => {
                   !!formik.errors.username && !!formik.touched.username
                 }
               >
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Felhasználónév</FormLabel>
                 <Input
                   name="username"
                   value={formik.values.username}
@@ -127,7 +127,7 @@ const Profile = () => {
                   !!formik.errors.newPassword && !!formik.touched.newPassword
                 }
               >
-                <FormLabel>New Password</FormLabel>
+                <FormLabel>Új jelszó</FormLabel>
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -135,7 +135,7 @@ const Profile = () => {
                     value={formik.values.newPassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    placeholder="Leave empty to keep current password"
+                    placeholder="Hagyd üresen a jelenlegi megtartásához"
                   />
                   <InputRightElement width="4.5rem">
                     <Button
@@ -147,7 +147,7 @@ const Profile = () => {
                       }}
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? "Elrejt" : "Mutat"}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -159,7 +159,7 @@ const Profile = () => {
                   !!formik.touched.confirmPassword
                 }
               >
-                <FormLabel>Confirm New Password</FormLabel>
+                <FormLabel>Új jelszó mégegyszer</FormLabel>
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -167,7 +167,7 @@ const Profile = () => {
                     value={formik.values.confirmPassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    placeholder="Repeat new password"
+                    placeholder="Új jelszó mégegyszer"
                   />
                   <InputRightElement width="4.5rem">
                     <Button
@@ -179,7 +179,7 @@ const Profile = () => {
                       }}
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? "Elrejt" : "Mutat"}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -201,7 +201,7 @@ const Profile = () => {
                 }}
               >
                 <Button type="submit" colorScheme="blue">
-                  Save Changes
+                  Módosítások mentése
                 </Button>
               </Box>
             </VStack>

@@ -41,7 +41,7 @@ const EventSearchBar: React.FC<EventSearchBarProps> = ({
           <SearchIcon color="gray.200" />
         </InputLeftElement>
         <Input
-          placeholder="Search events..."
+          placeholder="Események keresése..."
           bg="white"
           color="black"
           value={query}

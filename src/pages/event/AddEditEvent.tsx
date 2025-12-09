@@ -46,16 +46,16 @@ const AddEditEvent = () => {
       status: editingEvent?.status || "OPEN",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Title is required"),
-      description: Yup.string().required("Description is required"),
-      startDate: Yup.string().required("Start date is required"),
-      endDate: Yup.string().required("End date is required"),
-      location: Yup.string().required("Location is required"),
+      title: Yup.string().required("Cím megadása kötelező!"),
+      description: Yup.string().required("Leírás megadása kötelező!"),
+      startDate: Yup.string().required("Kezdő dátum megadása kötelező!"),
+      endDate: Yup.string().required("Befejező dáttum megadása kötelező!"),
+      location: Yup.string().required("Helyszín megadása kötelező!"),
       maxPlayers: Yup.number()
-        .min(1, "At least 1 player")
-        .required("Max players required"),
-      gameType: Yup.string().required("Game type is required"),
-      price: Yup.number().min(0, "Price cannot be negative"),
+        .min(1, "Legalább 1 játékos")
+        .required("Játékosszám megadása kötelező!"),
+      gameType: Yup.string().required("Játék típus megadása kötelező!"),
+      price: Yup.number().min(0, "Az ár nem lehet negatív!"),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -65,7 +65,7 @@ const AddEditEvent = () => {
           if (!editingEvent) return;
           savedEvent = await updateEvent({ id: editingEvent.id, ...values });
           toast({
-            title: "Event updated!",
+            title: "Esemény frissítve!",
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -73,14 +73,14 @@ const AddEditEvent = () => {
         } else {
           savedEvent = await addEvent(values);
           toast({
-            title: "Event created!",
+            title: "Esemény létrehozva!",
             status: "success",
             duration: 2000,
             isClosable: true,
           });
         }
         toast({
-          title: isEdit ? "Event updated!" : "Event created!",
+          title: isEdit ? "Esemény frissítvae" : "Esemény létrehozva!",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -89,7 +89,7 @@ const AddEditEvent = () => {
         router.push(`/event/${savedEvent.id}`);
       } catch (error: any) {
         toast({
-          title: "Error while processing event",
+          title: "Hiba történt",
           description: error?.message,
           status: "error",
           duration: 4000,
@@ -118,7 +118,9 @@ const AddEditEvent = () => {
           bg="white"
         >
           <HStack justify="space-between" mb={4}>
-            <Heading>{isEdit ? "Edit Event" : "Create Event"}</Heading>
+            <Heading>
+              {isEdit ? "Esemény szerkesztése" : "Esemény létrehozása"}
+            </Heading>
             <Badge
               colorScheme={
                 formik.values.visibility === "PUBLIC" ? "green" : "red"
@@ -131,7 +133,7 @@ const AddEditEvent = () => {
             <FormControl
               isInvalid={!!formik.errors.title && formik.touched.title}
             >
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Cím</FormLabel>
               <Input
                 name="title"
                 value={formik.values.title}
@@ -145,7 +147,7 @@ const AddEditEvent = () => {
                 !!formik.errors.description && formik.touched.description
               }
             >
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Leírás</FormLabel>
               <Textarea
                 name="description"
                 value={formik.values.description}
@@ -160,7 +162,7 @@ const AddEditEvent = () => {
                   !!formik.errors.startDate && formik.touched.startDate
                 }
               >
-                <FormLabel>Start Date</FormLabel>
+                <FormLabel>Kezdő dátum</FormLabel>
                 <Input
                   type="datetime-local"
                   name="startDate"
@@ -173,7 +175,7 @@ const AddEditEvent = () => {
               <FormControl
                 isInvalid={!!formik.errors.endDate && formik.touched.endDate}
               >
-                <FormLabel>End Date</FormLabel>
+                <FormLabel>Befejező dátum</FormLabel>
                 <Input
                   type="datetime-local"
                   name="endDate"
@@ -187,7 +189,7 @@ const AddEditEvent = () => {
             <FormControl
               isInvalid={!!formik.errors.location && formik.touched.location}
             >
-              <FormLabel>Location</FormLabel>
+              <FormLabel>Helyszín</FormLabel>
               <Input
                 name="location"
                 value={formik.values.location}
@@ -201,7 +203,7 @@ const AddEditEvent = () => {
                 !!formik.errors.maxPlayers && formik.touched.maxPlayers
               }
             >
-              <FormLabel>Max Players</FormLabel>
+              <FormLabel>Max játékosszám</FormLabel>
               <Input
                 type="number"
                 name="maxPlayers"
@@ -214,7 +216,7 @@ const AddEditEvent = () => {
             <FormControl
               isInvalid={!!formik.errors.gameType && formik.touched.gameType}
             >
-              <FormLabel>Game Type</FormLabel>
+              <FormLabel>Játék típus</FormLabel>
               <Select
                 name="gameType"
                 value={formik.values.gameType}
@@ -232,7 +234,7 @@ const AddEditEvent = () => {
             <FormControl
               isInvalid={!!formik.errors.price && formik.touched.price}
             >
-              <FormLabel>Price (HUF)</FormLabel>
+              <FormLabel>Ár (HUF)</FormLabel>
               <Input
                 type="number"
                 name="price"
@@ -247,15 +249,15 @@ const AddEditEvent = () => {
                 !!formik.errors.visibility && formik.touched.visibility
               }
             >
-              <FormLabel>Visibility</FormLabel>
+              <FormLabel>Láthatóság</FormLabel>
               <Select
                 name="visibility"
                 value={formik.values.visibility}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="PUBLIC">PUBLIC</option>
-                <option value="PRIVATE">PRIVATE</option>
+                <option value="PUBLIKUS">PUBLIKUS</option>
+                <option value="PRIVÁT">PRIVÁT</option>
               </Select>
               <FormErrorMessage>{formik.errors.visibility}</FormErrorMessage>
             </FormControl>
@@ -267,10 +269,10 @@ const AddEditEvent = () => {
               size="lg"
               onClick={() => formik.handleSubmit()}
             >
-              {isEdit ? "Save Changes" : "Create Event"}
+              {isEdit ? "Mentés" : "Létrehozás"}
             </Button>
             <Button variant="ghost" size="lg" onClick={handleCancel}>
-              Cancel
+              Mégse
             </Button>
           </HStack>
         </Box>

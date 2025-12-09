@@ -48,8 +48,8 @@ const EventPage = () => {
     }
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!currentEvent) return <div>Event not found.</div>;
+  if (loading) return <div>Betöltés...</div>;
+  if (!currentEvent) return <div>Esemény nem található.</div>;
 
   return (
     <>
@@ -72,10 +72,10 @@ const EventPage = () => {
             {currentEvent.visibility}
           </Badge>
           <Text fontSize="lg" fontWeight="medium" mb={2}>
-            <b>Location:</b> {currentEvent.location}
+            <b>Helyszín:</b> {currentEvent.location}
           </Text>
           <Text color="gray.600" mb={4}>
-            <b>Description:</b> {currentEvent.description}
+            <b>Leírás:</b> {currentEvent.description}
           </Text>
           <Divider mb={4} />
           <VStack align="start" spacing={2}>
@@ -83,19 +83,19 @@ const EventPage = () => {
               <b>Start:</b> {new Date(currentEvent.startDate).toLocaleString()}
             </Text>
             <Text>
-              <b>End:</b> {new Date(currentEvent.endDate).toLocaleString()}
+              <b>Vége:</b> {new Date(currentEvent.endDate).toLocaleString()}
             </Text>
             <Text>
-              <b>Max Players:</b> {maxPlayersText}
+              <b>Max játékosok:</b> {maxPlayersText}
             </Text>
             <Text>
-              <b>Game Type:</b> {currentEvent.gameType}
+              <b>Játék típus:</b> {currentEvent.gameType}
             </Text>
             <Text>
-              <b>Price:</b> {currentEvent.price} HUF
+              <b>Ár:</b> {currentEvent.price} HUF
             </Text>
             <Text>
-              <b>Status:</b> {currentEvent.status}
+              <b>Státusz:</b> {currentEvent.status}
             </Text>
           </VStack>
           <Divider my={6} />
@@ -111,7 +111,7 @@ const EventPage = () => {
                   }}
                   isDisabled={shouldRegisteringBeEnabled}
                 >
-                  Register Solo
+                  Regisztráció egyedül
                 </Button>
                 {isGroupCreator && (
                   <Button
@@ -120,7 +120,7 @@ const EventPage = () => {
                     onClick={onGroupModalOpen}
                     isDisabled={shouldRegisteringBeEnabled}
                   >
-                    Register Group
+                    Csoportos regisztráció
                   </Button>
                 )}
               </Box>
@@ -133,13 +133,13 @@ const EventPage = () => {
                   router.push("/Calendar");
                 }}
               >
-                Leave Event
+                Lejelentkezés
               </Button>
             )}
           </HStack>
           <Box mt={6}>
             <Button variant="ghost" onClick={() => router.push("/Calendar")}>
-              Back to Calendar
+              Vissza a Kalendárhoz
             </Button>
           </Box>
         </Box>

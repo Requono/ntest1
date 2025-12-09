@@ -62,7 +62,7 @@ const EventActionDialog: React.FC<EventActionDialogProps> = ({
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Event Options
+            Esemény opciói
           </AlertDialogHeader>
           <AlertDialogBody>
             {isEventSelected

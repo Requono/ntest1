@@ -10,7 +10,7 @@ const Footer = () => {
       width="100%"
     >
       <Flex align="center" maxW="1200px" mx="auto" w="100%">
-        <Text fontSize="sm">{new Date().getFullYear()} My Thesis Project</Text>
+        <Text fontSize="sm">{new Date().getFullYear()} Szakdolgozat</Text>
         <Spacer />
         <Link
           href="https://github.com/Requono/ntest1"

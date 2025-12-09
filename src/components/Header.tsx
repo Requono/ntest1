@@ -84,7 +84,7 @@ const Header = () => {
             leftIcon={<CalendarIcon />}
             size="md"
           >
-            Calendar
+            Kalendár
           </Button>
           <Button
             variant="outline"
@@ -94,7 +94,7 @@ const Header = () => {
             leftIcon={<UserGroups width="16px" height="16px" fill="white" />}
             size="md"
           >
-            Group
+            Csoport
           </Button>
           <Button
             variant="outline"
@@ -104,7 +104,7 @@ const Header = () => {
             leftIcon={<SettingsIcon />}
             size="md"
           >
-            Profile
+            Profil
           </Button>
         </Flex>
         <Spacer />
@@ -126,7 +126,9 @@ const Header = () => {
             size="md"
           >
             <Text fontWeight="bold" noOfLines={1}>
-              {username ? "Logged in as " + username : "Logged in as User"}
+              {username
+                ? "Bejelentkezve, mint " + username
+                : "Bejelentkezve, mint Felhasználó"}
             </Text>
           </MenuButton>
           <MenuList bg="green.700" borderColor="green.800">
@@ -135,7 +137,7 @@ const Header = () => {
               bg="green.700"
               _hover={{ bg: "green.800" }}
             >
-              Logout
+              Kijelentkezés
             </MenuItem>
           </MenuList>
         </Menu>

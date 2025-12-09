@@ -6,17 +6,17 @@ const Custom404 = () => {
     <Center h="100vh" p={4}>
       <VStack spacing={6} textAlign="center">
         <Text fontSize="4xl" fontWeight="bold">
-          404 Not Found
+          404 Nem található
         </Text>
         <Text fontSize="lg">
-          The page you’re looking for cannot be found. Start again from{" "}
+          Keresett oldal nem található. Kezdd előlről{" "}
           <ChakraLink
             as={NextLink}
             href="/Login"
             color="blue.400"
             fontWeight="bold"
           >
-            AirsoftKalendar.com
+            AirsoftKalendár
           </ChakraLink>
         </Text>
       </VStack>

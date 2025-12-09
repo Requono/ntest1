@@ -42,7 +42,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
         await createGroup(values.name);
 
         toast({
-          title: "Group created successfully!",
+          title: "Csoport sikeresen létrehozva!",
           isClosable: true,
           duration: 4000,
           status: "success",
@@ -51,7 +51,9 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
         onClose();
       } catch (error: any) {
         toast({
-          title: error?.response?.data?.message || "Error while creating group",
+          title:
+            error?.response?.data?.message ||
+            "Hiba történt a csoport létrehozása során",
           isClosable: true,
           duration: 4000,
           status: "error",
@@ -72,18 +74,18 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
             formik.handleSubmit();
           }}
         >
-          <ModalHeader>Create Group</ModalHeader>
+          <ModalHeader>Csoport létrehozása</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
             <VStack spacing="4" align="stretch">
               <FormControl isRequired>
-                <FormLabel>Group Name</FormLabel>
+                <FormLabel>Csoport neve</FormLabel>
                 <Input
                   name="name"
                   value={formik.values.name}
                   onChange={formik.handleChange}
-                  placeholder="Enter your group's name"
+                  placeholder="Csoport neve"
                 />
               </FormControl>
             </VStack>
@@ -91,7 +93,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
 
           <ModalFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
+              Mégse
             </Button>
 
             <Button
@@ -100,7 +102,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
               type="submit"
               isLoading={loading}
             >
-              Create Group
+              Létrehozás
             </Button>
           </ModalFooter>
         </form>

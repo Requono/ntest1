@@ -58,7 +58,7 @@ const Group = () => {
       await inviteUserToGroup(userId, groupId);
       setInvitedUsers((prev) => ({ ...prev, [userId]: true }));
     } catch (err) {
-      console.error("Failed to invite user:", err);
+      console.error("Felhasználó meghívása sikertelen:", err);
     }
   };
 
@@ -107,28 +107,28 @@ const Group = () => {
             )}
             {!loading && !groupId && (
               <>
-                <Heading mb={4}>No Group Yet</Heading>
+                <Heading mb={4}>Nincs csoportod</Heading>
                 <Text fontSize="lg" mb={6}>
-                  It seems you are not part of any group yet. You can create
-                  your own group and invite others!
+                  Úgy néz ki még nincs csoportod. Létrehozhatod a sajátodat és
+                  meghívhatsz másokat!
                 </Text>
 
                 <Button colorScheme="blue" width="full" onClick={onOpen}>
-                  Create Group
+                  Csoport létrehozása
                 </Button>
               </>
             )}
             {!loading && groupId && (
               <>
-                <Heading mb={4}>Your Group Members</Heading>
+                <Heading mb={4}>Saját csoportod</Heading>
                 <Text mb={4} fontSize="md" color="gray.600">
-                  Here's your team: <b>{currentGroup?.name}</b>
+                  A csapatod: <b>{currentGroup?.name}</b>
                 </Text>
 
                 <Divider mb={4} />
 
                 {members.length === 0 && (
-                  <Text>No members found in this group yet.</Text>
+                  <Text>Csoporttagok nem találhatóak.</Text>
                 )}
                 <VStack align="stretch" spacing={3}>
                   {members.map((member) => (
@@ -151,7 +151,7 @@ const Group = () => {
                             removeUserFromGroup(member.id, currentGroup!.id)
                           }
                         >
-                          Remove
+                          Eltávolítás
                         </Button>
                       )}
                     </Flex>
@@ -161,13 +161,13 @@ const Group = () => {
             )}
             {!loading && groupId && members.length < 5 && isGroupCreator && (
               <Box p={6} borderWidth={1} borderRadius="md" mt={2}>
-                <Heading mb={4}>Suggestions to Fill Your Team</Heading>
+                <Heading mb={4}>Ajánlások</Heading>
                 <Text fontSize="md" mb={4}>
-                  Until you have 5 members, here are some users without a group:
+                  Ameddig nincs 5 csoporttagod, itt van pár ajánlás:
                 </Text>
                 <VStack align="stretch" spacing={3}>
                   {usersWithoutGroup.length === 0 && (
-                    <Text>No users available.</Text>
+                    <Text>Nem találhatóak felhasználók</Text>
                   )}
                   {usersWithoutGroup.map((user) => (
                     <Flex
@@ -186,7 +186,7 @@ const Group = () => {
                         onClick={() => handleInvite(user.id)}
                         isDisabled={!!invitedUsers[user.id] || !groupId}
                       >
-                        {invitedUsers[user.id] ? "Invited" : "Invite"}
+                        {invitedUsers[user.id] ? "Meghívva" : "Meghívás"}
                       </Button>
                     </Flex>
                   ))}

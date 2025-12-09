@@ -33,21 +33,21 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
   const { createUser } = useUserStore();
 
   const registerSchema = Yup.object().shape({
-    username: Yup.string().required("Username field is required!"),
+    username: Yup.string().required("Felhasználónév megadása kötelező!"),
     email: Yup.string()
-      .required("E-mail field is required!")
-      .email("Please enter a valid e-mail"),
+      .required("E-mail megadása kötelező!")
+      .email("Érvényes e-mail címet adj meg!"),
     password: Yup.string()
-      .required("Password is a required field!")
-      .min(8, "Not long enough!")
-      .matches(/[a-z]/, "Password must contain at least a small letter!")
-      .matches(/[A-Z]/, "Password must contain at least a capital letter!")
-      .matches(/[0-9]/, "Password must contain at least a number!"),
+      .required("Jelszó megadása kötelező!")
+      .min(8, "Nem elég hosszú!")
+      .matches(/[a-z]/, "A jelszónak tartalmaznia kell legalább 1 kisbetűt")
+      .matches(/[A-Z]/, "A jelszónak tartalmaznia kell legalább 1 nagybetűt")
+      .matches(/[0-9]/, "A jelszónak tartalmaznia kell legalább 1 számot"),
     repassword: Yup.string()
-      .required("Password again is a required field!")
+      .required("Jelszó ellenőrzése kötelező!")
       .test({
         name: "is-the-same",
-        message: "Password does not match!",
+        message: "Jelszavak nem egyeznek!",
         test: (value, context) => {
           return value === context.parent.password;
         },
@@ -76,7 +76,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
         await createUser(values.username, values.email, loginHash);
 
         toast({
-          title: "Successful registration!",
+          title: "Sikeres regisztráció!",
           isClosable: true,
           duration: 4000,
           status: "success",
@@ -106,14 +106,14 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
     >
       <Box w="400px" p={6} borderWidth={1} borderRadius="md">
         <Heading size="md" mb={6} textAlign="center">
-          Register
+          Regisztráció
         </Heading>
         <form onSubmit={formik.handleSubmit}>
           <VStack spacing={4} align="stretch">
             <FormControl
               isInvalid={!!formik.errors.username && !!formik.touched.username}
             >
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Felhasználónév</FormLabel>
               <Input
                 name="username"
                 value={formik.values.username}
@@ -138,7 +138,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
             <FormControl
               isInvalid={!!formik.errors.password && !!formik.touched.password}
             >
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Jelszó</FormLabel>
               <InputGroup>
                 <Input
                   name="password"
@@ -153,7 +153,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? "Elrejt" : "Mutat"}
                   </Button>
                 </InputRightElement>
               </InputGroup>
@@ -164,7 +164,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
                 !!formik.errors.repassword && !!formik.touched.repassword
               }
             >
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Jelszó mégegyszer</FormLabel>
               <InputGroup>
                 <Input
                   name="repassword"
@@ -179,17 +179,17 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? "Elrejt" : "Mutat"}
                   </Button>
                 </InputRightElement>
               </InputGroup>
               <FormErrorMessage>{formik.errors.repassword}</FormErrorMessage>
             </FormControl>
             <Button type="submit" colorScheme="blue" width="full" mt={4}>
-              {loading ? <Spinner /> : "Sign Up"}
+              {loading ? <Spinner /> : "Regisztráció"}
             </Button>
             <Flex align="center" justify="center" mt={3} mb={2}>
-              <Box>Or if you already have an account:</Box>
+              <Box>Ha már van felhasználód:</Box>
             </Flex>
             <Button
               variant="outline"
@@ -198,7 +198,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
               mt={2}
               onClick={() => router.push("/Login")}
             >
-              Log in
+              Bejelentkezés
             </Button>
           </VStack>
         </form>
