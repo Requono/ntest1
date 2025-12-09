@@ -14,15 +14,10 @@ import {
 } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AddGroupModal from "@/components/CreateGroupModal";
+import CreateGroupModal from "@/components/CreateGroupModal";
 import { requireAuth } from "@/utils/requireAuth";
 import { GetServerSidePropsContext } from "next";
 import GroupUserSearchBar from "@/components/GroupUserSearchBar";
-
-/**TODO:
- * A: magyarosítás
- * B: UI felcsinosítása
- */
 
 const Group = () => {
   const { userId, groupId, fetchUser } = useUserStore();
@@ -209,7 +204,7 @@ const Group = () => {
         </>
       </Box>
       <Footer />
-      {isOpen && <AddGroupModal isOpen={isOpen} onClose={onClose} />}
+      {isOpen && <CreateGroupModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
 };
