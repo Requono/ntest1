@@ -42,8 +42,8 @@ const AddEditEvent = () => {
       maxPlayers: editingEvent?.maxPlayers || "",
       gameType: editingEvent?.gameType || AirsoftEventType.SKIRMISH,
       price: editingEvent?.price || 0,
-      visibility: editingEvent?.visibility || "PUBLIC",
-      status: editingEvent?.status || "OPEN",
+      visibility: editingEvent?.visibility || "Publikus",
+      status: editingEvent?.status || "Nyitott",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Cím megadása kötelező!"),
@@ -79,12 +79,6 @@ const AddEditEvent = () => {
             isClosable: true,
           });
         }
-        toast({
-          title: isEdit ? "Esemény frissítvae" : "Esemény létrehozva!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
         clearEditingEvent();
         router.push(`/event/${savedEvent.id}`);
       } catch (error: any) {
