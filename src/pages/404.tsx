@@ -12,7 +12,7 @@ const Custom404 = () => {
           Keresett oldal nem található. Kezdd előlről{" "}
           <ChakraLink
             as={NextLink}
-            href="/Login"
+            href="/login"
             color="blue.400"
             fontWeight="bold"
           >

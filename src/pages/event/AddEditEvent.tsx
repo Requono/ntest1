@@ -95,7 +95,7 @@ const AddEditEvent = () => {
 
   const handleCancel = () => {
     clearEditingEvent();
-    router.push("/Calendar");
+    router.push("/calendar");
   };
 
   return (

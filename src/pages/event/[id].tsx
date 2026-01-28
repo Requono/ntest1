@@ -107,7 +107,7 @@ const EventPage = () => {
                   size="lg"
                   onClick={() => {
                     joinEvent(currentEvent.id);
-                    router.push("/Calendar");
+                    router.push("/calendar");
                   }}
                   isDisabled={shouldRegisteringBeEnabled}
                 >
@@ -130,7 +130,7 @@ const EventPage = () => {
                 size="lg"
                 onClick={() => {
                   leaveEvent(currentEvent.id);
-                  router.push("/Calendar");
+                  router.push("/calendar");
                 }}
               >
                 Lejelentkezés
@@ -138,7 +138,7 @@ const EventPage = () => {
             )}
           </HStack>
           <Box mt={6}>
-            <Button variant="ghost" onClick={() => router.push("/Calendar")}>
+            <Button variant="ghost" onClick={() => router.push("/calendar")}>
               Vissza a Kalendárhoz
             </Button>
           </Box>
@@ -151,7 +151,7 @@ const EventPage = () => {
         members={members || []}
         onSubmit={(userIds: string[]) => {
           joinGroupEvent(currentEvent.id, userIds);
-          router.push("/Calendar");
+          router.push("/calendar");
         }}
       />
     </>

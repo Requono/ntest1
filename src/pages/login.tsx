@@ -81,7 +81,7 @@ const Login = () => {
           encryptionKey
         );
 
-        router.push("/Calendar");
+        router.push("/calendar");
       } catch (err: any) {
         toast({
           title: err.response.data.message,
@@ -158,7 +158,7 @@ const Login = () => {
             <Button
               variant="outline"
               colorScheme="telegram"
-              onClick={() => router.push("/Register")}
+              onClick={() => router.push("/register")}
             >
               Regisztráció
             </Button>

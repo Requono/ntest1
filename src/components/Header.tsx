@@ -26,7 +26,7 @@ const Header = () => {
   const logoutUser = useUserStore((state) => state.logoutUser);
   const handleLogout = () => {
     logoutUser();
-    router.push("/Login");
+    router.push("/login");
   };
 
   const { events } = useEventStore();
@@ -80,7 +80,7 @@ const Header = () => {
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/Calendar")}
+            onClick={() => router.push("/calendar")}
             leftIcon={<CalendarIcon />}
             size="md"
           >
@@ -90,7 +90,7 @@ const Header = () => {
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/Group")}
+            onClick={() => router.push("/group")}
             leftIcon={<UserGroups width="16px" height="16px" fill="white" />}
             size="md"
           >
@@ -100,7 +100,7 @@ const Header = () => {
             variant="outline"
             colorScheme="white"
             _hover={{ bg: "green.800" }}
-            onClick={() => router.push("/Profile")}
+            onClick={() => router.push("/profile")}
             leftIcon={<SettingsIcon />}
             size="md"
           >

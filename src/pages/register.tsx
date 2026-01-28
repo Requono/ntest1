@@ -82,7 +82,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
           status: "success",
         });
 
-        router.push("/Login");
+        router.push("/login");
       } catch (error: any) {
         toast({
           title: error.response.data.username,
@@ -196,7 +196,7 @@ const Register: React.FC<RegisterProps> = ({ iterations }) => {
               colorScheme="telegram"
               width="full"
               mt={2}
-              onClick={() => router.push("/Login")}
+              onClick={() => router.push("/login")}
             >
               Bejelentkezés
             </Button>
