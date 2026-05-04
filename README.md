@@ -42,7 +42,7 @@ npm run dev
 
 A fejlesztői szerver elérhető: http://localhost:3000
 
-## 🗄️ Prisma (adatbázis)
+## 🗄️ Prisma (ORM)
 
 Migrációk futtatása:
 
