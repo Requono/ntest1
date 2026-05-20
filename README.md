@@ -1,4 +1,4 @@
-# NTest1
+# AirsoftKalendár: Csoportos vagy egyéni eseménykezelő alkalmazás
 
 ## 📌 Szakdolgozat leírás
 
